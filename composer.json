@@ -1,0 +1,10 @@
+{
+    "name": "calebporzio/model-families",
+    "authors": [
+        {
+            "name": "Caleb Porzio",
+            "email": "calebporzio@gmail.com"
+        }
+    ],
+    "require": {}
+}
