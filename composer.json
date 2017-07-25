@@ -6,5 +6,7 @@
             "email": "calebporzio@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "phpunit/phpunit": "^6.2"
+    }
 }
