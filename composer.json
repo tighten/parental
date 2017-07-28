@@ -7,6 +7,12 @@
         }
     ],
     "require": {
-        "phpunit/phpunit": "^6.2"
+        "phpunit/phpunit": "^6.2",
+        "laravel/framework": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "ModelFamily\\": "src/"
+        }
     }
 }
