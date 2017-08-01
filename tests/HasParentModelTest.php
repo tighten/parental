@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Eloquent\Model;
-use ModelFamily\HasParentModel;
+use Tightenco\ModelInheritance\HasParentModel;
 
 class HasParentModelTest extends PHPUnit_Framework_TestCase
 {

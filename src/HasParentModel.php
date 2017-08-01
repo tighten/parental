@@ -1,6 +1,6 @@
 <?php
 
-namespace ModelFamily;
+namespace Tightenco\ModelInheritance;
 
 use Illuminate\Support\Str;
 use ReflectionClass;

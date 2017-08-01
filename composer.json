@@ -1,5 +1,7 @@
 {
-    "name": "calebporzio/model-families",
+    "name": "tightenco/model-inheritance",
+    "description": "A simple eloquent trait that allows relationships to be accessed through child models.",
+    "license": "MIT",
     "authors": [
         {
             "name": "Caleb Porzio",
@@ -7,12 +9,14 @@
         }
     ],
     "require": {
-        "phpunit/phpunit": "^6.2",
         "laravel/framework": "^5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.2"
     },
     "autoload": {
         "psr-4": {
-            "ModelFamily\\": "src/"
+            "Tightenco\\ModelInheritance\\": "src/"
         }
     }
 }
