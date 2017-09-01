@@ -20,6 +20,7 @@ class Admin extends User
     use Tightenco\Parental\HasParentModel;
 }
 ```
+Vioala!
 
 ## Installation
 `$ composer require tightenco/parental`
