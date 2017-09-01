@@ -1,5 +1,5 @@
 {
-    "name": "tightenco/model-inheritance",
+    "name": "tightenco/parental",
     "description": "A simple eloquent trait that allows relationships to be accessed through child models.",
     "license": "MIT",
     "authors": [
@@ -9,10 +9,10 @@
         }
     ],
     "require": {
-        "laravel/framework": "5.4.*"
+        "laravel/framework": "5.5.*"
     },
     "require-dev": {
-        "orchestra/testbench": "~3.0",
+        "orchestra/testbench": "3.5.*",
         "phpunit/phpunit": "^6.2"
     },
     "autoload": {

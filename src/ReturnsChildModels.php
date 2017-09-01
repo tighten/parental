@@ -48,7 +48,9 @@ trait ReturnsChildModels
         return parent::hasMany($related, $foreignKey = null, $localKey = null);
     }
 
-    public function belongsToMany($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
+    // public function belongsToMany($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
+    public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null,
+                                  $parentKey = null, $relatedKey = null, $relation = null)
     {
         $instance = $this->newRelatedInstance($related);
 
@@ -56,7 +58,8 @@ trait ReturnsChildModels
             $table = $this->joiningTable($instance->getClassNameForRelationships());
         }
 
-        return parent::belongsToMany($related, $table, $foreignKey, $relatedKey, $relation);
+        return parent::belongsToMany($related, $table, $foreignPivotKey, $relatedPivotKey,
+                                     $parentKey, $relatedKey, $relation);
     }
 
     public function getClassNameForRelationships()
