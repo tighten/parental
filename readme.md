@@ -5,11 +5,11 @@ When you extend an Eloquent model, Eloquent looks at the class name to determine
 ```php
 /** Admin extends User */
 
-$admin = Admin::all(); // thinks table name is "admins"
+$admin = Admin::all(); // thinks table name is "admins" (instead of "users")
 
-$admin->comments; // thinks foreign key is "admin_id"
+$admin->comments; // thinks foreign key is "admin_id" (instead of "user_id")
 
-$admin->tags; // thinks pivot table is "admin_tag"
+$admin->tags; // thinks pivot table is "admin_tag" (instead of "tag_user")
 ```
 
 ## The Solution
