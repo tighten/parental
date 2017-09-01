@@ -1,9 +1,12 @@
 <?php
 
-use Illuminate\Database\Eloquent\Model;
-use Tightenco\ModelInheritance\HasParentModel;
+namespace Tightenco\Parental\Tests\Unit;
 
-class HasParentModelTest extends PHPUnit_Framework_TestCase
+use Illuminate\Database\Eloquent\Model;
+use Tightenco\Parental\HasParentModel;
+use Tightenco\Parental\Tests\TestCase;
+
+class HasParentModelTest extends TestCase
 {
     /** @test */
     function child_model_has_table_name_of_parent_model()

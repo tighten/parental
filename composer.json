@@ -9,14 +9,20 @@
         }
     ],
     "require": {
-        "laravel/framework": "^5.4"
+        "laravel/framework": "5.4.*"
     },
     "require-dev": {
+        "orchestra/testbench": "~3.0",
         "phpunit/phpunit": "^6.2"
     },
     "autoload": {
         "psr-4": {
-            "Tightenco\\ModelInheritance\\": "src/"
+            "Tightenco\\Parental\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tightenco\\Parental\\Tests\\": "tests/"
         }
     }
 }
