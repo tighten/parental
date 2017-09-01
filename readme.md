@@ -1,17 +1,25 @@
 # Model Inheritance
 
-## Installation
-`> composer require tightenco/model-inheritance`
+## The Problem
+When you extend an Eloquent model, Eloquent looks at the class name to determine important database tables and fields.
+```php
+/** Admin extends User */
 
-## Usage
-To use this package, add the `HasParentModel` trait to an eloquent model that extends another model.
+$admin = Admin::all(); // thinks table name is "admins"
+
+$admin->comments; // thinks foreign key is "admin_id"
+
+$admin->tags; // thinks pivot table is "admin_tag"
 ```
-<?php
 
-use Tightenco\ModelInheritance\HasParentModel;
-
+## The Solution
+All you need to do is add the `HasParentModel` trait to your child model.
+```php
 class Admin extends User
 {
-    use HasParentModel;
+    use Tightenco\Parental\HasParentModel;
 }
 ```
+
+## Installation
+`$ composer require tightenco/parental`
