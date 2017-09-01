@@ -2,10 +2,12 @@
 
 namespace Tightenco\Parental\Tests\Features;
 
+use Tightenco\Parental\Tests\Models\Admin;
 use Tightenco\Parental\Tests\Models\Car;
 use Tightenco\Parental\Tests\Models\Driver;
 use Tightenco\Parental\Tests\Models\Passenger;
 use Tightenco\Parental\Tests\Models\Trip;
+use Tightenco\Parental\Tests\Models\User;
 use Tightenco\Parental\Tests\Models\Vehicle;
 use Tightenco\Parental\Tests\TestCase;
 
@@ -19,6 +21,16 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
 
         $this->assertCount(2, Vehicle::all());
         $this->assertCount(1, Car::all());
+    }
+
+    /** @test */
+    function child_without_type_column_isnt_scoped()
+    {
+        $admin = Admin::create();
+        $user = User::create();
+
+        $this->assertCount(2, User::all());
+        $this->assertCount(2, Admin::all());
     }
 
     /** @test */

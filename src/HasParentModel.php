@@ -13,7 +13,10 @@ trait HasParentModel
     {
         static::addGlobalScope(function ($query) {
             $instance = new static;
-            $query->where($instance->getInhertanceColumn(), get_class($instance));
+
+            if ($instance->parentHasReturnsChildModelsTrait()) {
+                $query->where($instance->getInhertanceColumn(), get_class($instance));
+            }
         });
     }
 

@@ -59,5 +59,10 @@ class TestCase extends BaseTestCase
             $table->string('type')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('users', function ($table) {
+            $table->increments('id');
+            $table->timestamps();
+        });
     }
 }
