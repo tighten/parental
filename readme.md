@@ -1,4 +1,5 @@
 # Parental
+Parental is a laravel package by Tighten that brings STI (Single Table Inheritance) capabilities to Eloquent.
 
 ## The Problem
 When you extend an Eloquent model, Eloquent looks at the class name to determine important database tables and fields.
