@@ -8,7 +8,7 @@ trait ReturnsChildModels
 {
     protected $returnsChildModels = true;
 
-    public function newInstance($attributes = [], $exists = false)
+    public function newInstance($attributes = [], $exists = false, $connection = null)
     {
         $model = isset($attributes[$this->getInhertanceColumn()])
             ? new $attributes[$this->getInhertanceColumn()]((array) $attributes)
@@ -17,6 +17,7 @@ trait ReturnsChildModels
         $model->exists = $exists;
 
         $model->setConnection(
+            $connection ?:
             $this->getConnectionName()
         );
 
@@ -25,7 +26,7 @@ trait ReturnsChildModels
 
     public function newFromBuilder($attributes = [], $connection = null)
     {
-        return $this->newInstance((array) $attributes, true);
+        return $this->newInstance((array) $attributes, true, $connection);
     }
 
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
