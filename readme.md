@@ -1,10 +1,13 @@
 # Parental
-Parental is a laravel package by Tighten that brings STI (Single Table Inheritance) capabilities to Eloquent.
+
+Parental is a early-stage development, alpha Laravel package by Tighten that brings STI (Single Table Inheritance) capabilities to Eloquent.
 
 ## The Problem
+
 When you extend an Eloquent model, Eloquent looks at the class name to determine important database tables and fields.
+
 ```php
-/** Admin extends User */
+/** Admin model extends User model */
 
 $admin = Admin::all(); // thinks table name is "admins" (instead of "users")
 
@@ -14,14 +17,20 @@ $admin->tags; // thinks pivot table is "admin_tag" (instead of "tag_user")
 ```
 
 ## The Solution
-All you need to do is add the `HasParentModel` trait to your child model.
+
+After pulling in Parental, simply add the `HasParentModel` trait to your child model.
+
 ```php
 class Admin extends User
 {
     use Tightenco\Parental\HasParentModel;
 }
 ```
-Vioala!
+
+Voilà!
 
 ## Installation
-`$ composer require tightenco/parental`
+
+```bash
+composer require tightenco/parental
+```
