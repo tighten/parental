@@ -25,7 +25,13 @@ trait ReturnsChildModels
 
     public function newFromBuilder($attributes = [], $connection = null)
     {
-        return $this->newInstance((array) $attributes, true);
+        $model = $this->newInstance((array) $attributes, true);
+        
+        $model->setConnection($connection ?: $this->getConnectionName());
+        
+        $model->fireModelEvent('retrieved', false);
+        
+        return $model;
     }
 
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
