@@ -7,7 +7,7 @@ Parental is an early-stage development, alpha Laravel package by Tighten that br
 ## Installation
 
 ```bash
-composer require tightenco/parental
+composer require "tightenco/parental=0.2-alpha"
 ```
 
 ## Simple Usage
