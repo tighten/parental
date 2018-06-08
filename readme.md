@@ -1,3 +1,5 @@
+![Parental - Use single table inheritance in your Laravel App](parental-banner.png)
+
 # Parental
 
 Parental is a early-stage development, alpha Laravel package by Tighten that brings STI (Single Table Inheritance) capabilities to Eloquent.
