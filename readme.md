@@ -39,7 +39,7 @@ By adding the `HasParentModel` class to your Admin model, all the hard work is d
 
 1. Create "child/children" models: ex. `Admin.php`, `Manager.php`
 1. Extend "parent" model: ex. `User.php`
-1. Add "type" column to "vehicles" table
+1. Add `type` column to `users` table
 1. Add `HasParentModel` trait to `Admin.php`, `Manager.php`
 1. Add `ReturnsChildModels` trait to `User.php`
 
@@ -68,6 +68,11 @@ class User extends Model
 {
     use ReturnsChildModels;
 }
+```
+
+```php
+// In users table migration:
+$table->string('type')->nullable();
 ```
 
 ```php
