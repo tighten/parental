@@ -80,6 +80,8 @@ trait HasParentModel
 
     protected function getParentClass()
     {
-        return (new ReflectionClass($this))->getParentClass()->getName();
+        static $parentClassName;
+
+        return $parentClassName ?: $parentClassName = (new ReflectionClass($this))->getParentClass()->getName();
     }
 }
