@@ -9,7 +9,9 @@ class Vehicle extends Model
 {
     use ReturnsChildModels;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'type', 'driver_id'
+    ];
 
     public function driver()
     {
