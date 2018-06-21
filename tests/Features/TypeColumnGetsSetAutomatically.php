@@ -37,6 +37,14 @@ class TypeColumnGetsSetAutomatically extends TestCase
     }
 
     /** @test */
+    function type_column_gets_set_on_creation_from_a_model_factory()
+    {
+        $car = factory(Car::class)->create();
+
+        $this->assertNotNull($car->type);
+    }
+
+    /** @test */
     function custom_type_column_gets_used()
     {
         $internationalTrip = InternationalTrip::create();

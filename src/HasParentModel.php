@@ -11,6 +11,14 @@ trait HasParentModel
 
     public static function bootHasParentModel()
     {
+        static::creating(function ($model) {
+            if ($model->parentHasReturnsChildModelsTrait()) {
+                $model->forceFill(
+                    [$model->getInhertanceColumn() => get_class($model)]
+                );
+            }
+        });
+
         static::addGlobalScope(function ($query) {
             $instance = new static;
 
@@ -20,27 +28,9 @@ trait HasParentModel
         });
     }
 
-    public function newInstance($attributes = [], $exists = false)
-    {
-        if ($this->parentHasReturnsChildModelsTrait()) {
-            $attributes = $this->setTypeColumn($attributes);
-        }
-
-        return parent::newInstance($attributes, $exists);
-    }
-
     public function parentHasReturnsChildModelsTrait()
     {
         return $this->returnsChildModels ?? false;
-    }
-
-    public function setTypeColumn($attributes)
-    {
-        if (! isset($attributes[$this->getInhertanceColumn()]) && ! $this->exists) {
-            $attributes[$this->getInhertanceColumn()] = get_class($this);
-        }
-
-        return $attributes;
     }
 
     public function getTable()

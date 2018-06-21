@@ -12,6 +12,8 @@ class TestCase extends BaseTestCase
         parent::setUp();
 
         $this->runMigrations();
+
+        $this->withFactories(__DIR__ . '/factories');
     }
 
     protected function getEnvironmentSetUp($app)
