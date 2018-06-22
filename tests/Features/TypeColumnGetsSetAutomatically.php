@@ -37,6 +37,15 @@ class TypeColumnGetsSetAutomatically extends TestCase
     }
 
     /** @test */
+    function type_column_gets_set_on_saving_from_has_many_relationship()
+    {
+        $driver = Driver::create(['name' => 'Joe']);
+        $car = $driver->cars()->save(new Car);
+
+        $this->assertNotNull($car->fresh()->type);
+    }
+
+    /** @test */
     function type_column_gets_set_on_creation_from_a_model_factory()
     {
         $car = factory(Car::class)->create();
