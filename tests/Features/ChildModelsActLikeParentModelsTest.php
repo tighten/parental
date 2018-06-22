@@ -12,7 +12,7 @@ use Tightenco\Parental\Tests\TestCase;
 class ChildModelsActLikeParentModelsTest extends TestCase
 {
     /** @test */
-    function test_vehicle_can_access_belongs_to_relationship_on_car_model()
+    function vehicle_can_access_belongs_to_relationship_on_car_model()
     {
         $car = Car::create([
             'driver_id' => Driver::create(['name' => 'Joe'])->id,
@@ -24,7 +24,7 @@ class ChildModelsActLikeParentModelsTest extends TestCase
     }
 
     /** @test */
-    function test_vehicle_can_access_has_many_relationship_on_car_model()
+    function vehicle_can_access_has_many_relationship_on_car_model()
     {
         $car = Car::create();
 
@@ -37,7 +37,7 @@ class ChildModelsActLikeParentModelsTest extends TestCase
     }
 
     /** @test */
-    function test_vehicle_can_access_many_to_many_relationship_on_car_model()
+    function vehicle_can_access_many_to_many_relationship_on_car_model()
     {
         $car = Car::create();
 
@@ -49,7 +49,7 @@ class ChildModelsActLikeParentModelsTest extends TestCase
     }
 
     /** @test */
-    public function guarded_models_are_filled_properly()
+    public function guarded_or_fillable_models_have_raw_attributes_like_timestamps()
     {
         $vehicle = Vehicle::create()->fresh();
 
