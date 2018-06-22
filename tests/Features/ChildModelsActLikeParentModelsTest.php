@@ -47,4 +47,14 @@ class ChildModelsActLikeParentModelsTest extends TestCase
 
         $this->assertEquals($vehicle->fresh()->trips->pluck('id'), $car->fresh()->trips->pluck('id'));
     }
+
+    /** @test */
+    public function guarded_models_are_filled_properly()
+    {
+        $vehicle = Vehicle::create()->fresh();
+
+        $this->assertNotNull($vehicle->id);
+        $this->assertNotNull($vehicle->created_at);
+        $this->assertNotNull($vehicle->updated_at);
+    }
 }

@@ -26,7 +26,9 @@ trait ReturnsChildModels
     public function newFromBuilder($attributes = [], $connection = null)
     {
         $model = $this->newInstance((array) $attributes, true);
-        
+
+        $model->setRawAttributes((array) $attributes, true);
+
         $model->setConnection($connection ?: $this->getConnectionName());
         
         $model->fireModelEvent('retrieved', false);
