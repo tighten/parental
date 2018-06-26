@@ -11,7 +11,7 @@ trait ReturnsChildModels
     public function newInstance($attributes = [], $exists = false)
     {
         $model = isset($attributes[$this->getInhertanceColumn()])
-            ? new $attributes[$this->getInhertanceColumn()]((array) $attributes)
+            ? $this->getChildClass($attributes)
             : new static(((array) $attributes));
 
         $model->exists = $exists;
@@ -78,5 +78,18 @@ trait ReturnsChildModels
     public function getInhertanceColumn()
     {
         return $this->inheritanceColumn ?: 'type';
+    }
+
+    protected function getChildClass(array $attributes)
+    {
+        $className = $attributes[$this->getInhertanceColumn()];
+
+        if (property_exists($this, 'childTypes')) {
+            if (isset($this->childTypes[$className])) {
+                $className = $this->childTypes[$className];
+            }
+        }
+
+        return new $className((array)$attributes);
     }
 }

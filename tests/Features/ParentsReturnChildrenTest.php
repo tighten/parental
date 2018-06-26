@@ -24,6 +24,18 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     }
 
     /** @test */
+    function types_can_be_mapped_to_classes()
+    {
+        Car::create(['type' => 'car']);
+        Plane::create(['type' => Plane::class]);
+
+        $vehicles = Vehicle::all();
+
+        $this->assertInstanceOf(Car::class, $vehicles[0]);
+        $this->assertInstanceOf(Plane::class, $vehicles[1]);
+    }
+
+    /** @test */
     function vehicle_query_builder_get_method_returns_child_models()
     {
         $car = Car::create(['type' => Car::class]);

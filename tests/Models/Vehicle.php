@@ -13,6 +13,12 @@ class Vehicle extends Model
         'type', 'driver_id'
     ];
 
+    protected $childTypes = [
+        'car' => Car::class
+    ];
+
+    protected $guarded = [];
+
     public function driver()
     {
         return $this->belongsTo(Driver::class);
