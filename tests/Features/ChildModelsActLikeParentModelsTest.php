@@ -28,8 +28,8 @@ class ChildModelsActLikeParentModelsTest extends TestCase
     {
         $car = Car::create();
 
-        $passengerA = Passenger::create(['name' => 'Jack', 'vehicle_id' => $car->id]);
-        $passengerB = Passenger::create(['name' => 'Jill', 'vehicle_id' => $car->id]);
+        Passenger::create(['name' => 'Jack', 'vehicle_id' => $car->id]);
+        Passenger::create(['name' => 'Jill', 'vehicle_id' => $car->id]);
 
         $vehicle = Vehicle::find($car->id);
 

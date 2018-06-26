@@ -16,8 +16,8 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
     /** @test */
     function child_is_scoped_based_on_type_column()
     {
-        $car = Car::create();
-        $vehicle = Vehicle::create();
+        Car::create();
+        Vehicle::create();
 
         $this->assertCount(2, Vehicle::all());
         $this->assertCount(1, Car::all());
@@ -26,8 +26,8 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
     /** @test */
     function child_without_type_column_isnt_scoped()
     {
-        $admin = Admin::create();
-        $user = User::create();
+        Admin::create();
+        User::create();
 
         $this->assertCount(2, User::all());
         $this->assertCount(2, Admin::all());
@@ -53,8 +53,8 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
     function child_is_scoped_when_accessed_from_has_many()
     {
         $driver = Driver::create(['name' => 'joe']);
-        $car = Car::create(['driver_id' => $driver->id]);
-        $vehicle = Vehicle::create(['driver_id' => $driver->id]);
+        Car::create(['driver_id' => $driver->id]);
+        Vehicle::create(['driver_id' => $driver->id]);
 
         $this->assertCount(2, $driver->vehicles);
         $this->assertCount(1, $driver->cars);

@@ -14,8 +14,8 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     /** @test */
     function vehicle_all_method_returns_child_models()
     {
-        $car = Car::create(['type' => Car::class]);
-        $plane = Plane::create(['type' => Plane::class]);
+        Car::create(['type' => Car::class]);
+        Plane::create(['type' => Plane::class]);
 
         $vehicles = Vehicle::all();
 
@@ -38,9 +38,9 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     /** @test */
     function vehicle_query_builder_get_method_returns_child_models()
     {
-        $car = Car::create(['type' => Car::class]);
-        $plane = Plane::create(['type' => Plane::class]);
-        $vehicle = Vehicle::create();
+        Car::create(['type' => Car::class]);
+        Plane::create(['type' => Plane::class]);
+        Vehicle::create();
 
         $vehicles = Vehicle::query()->get();
 
@@ -53,7 +53,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     function has_many_returns_child_models()
     {
         $driver = Driver::create(['name' => 'Joe']);
-        $car = Car::create([
+        Car::create([
             'type' => Car::class,
             'driver_id' => $driver->id,
         ]);
