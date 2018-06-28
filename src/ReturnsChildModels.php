@@ -11,7 +11,7 @@ trait ReturnsChildModels
     public function newInstance($attributes = [], $exists = false)
     {
         $model = isset($attributes[$this->getInhertanceColumn()])
-            ? $this->getChildClass($attributes)
+            ? $this->getChildModel($attributes)
             : new static(((array) $attributes));
 
         $model->exists = $exists;
@@ -30,9 +30,9 @@ trait ReturnsChildModels
         $model->setRawAttributes((array) $attributes, true);
 
         $model->setConnection($connection ?: $this->getConnectionName());
-        
+
         $model->fireModelEvent('retrieved', false);
-        
+
         return $model;
     }
 
@@ -56,9 +56,7 @@ trait ReturnsChildModels
         return parent::hasMany($related, $foreignKey = null, $localKey = null);
     }
 
-    // public function belongsToMany($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
-    public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null,
-                                  $parentKey = null, $relatedKey = null, $relation = null)
+    public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null, $parentKey = null, $relatedKey = null, $relation = null)
     {
         $instance = $this->newRelatedInstance($related);
 
@@ -66,8 +64,7 @@ trait ReturnsChildModels
             $table = $this->joiningTable($instance->getClassNameForRelationships());
         }
 
-        return parent::belongsToMany($related, $table, $foreignPivotKey, $relatedPivotKey,
-                                     $parentKey, $relatedKey, $relation);
+        return parent::belongsToMany($related, $table, $foreignPivotKey, $relatedPivotKey, $parentKey, $relatedKey, $relation);
     }
 
     public function getClassNameForRelationships()
@@ -80,13 +77,13 @@ trait ReturnsChildModels
         return $this->inheritanceColumn ?: 'type';
     }
 
-    protected function getChildClass(array $attributes)
+    protected function getChildModel(array $attributes)
     {
         $className = $attributes[$this->getInhertanceColumn()];
 
-        if (property_exists($this, 'childTypes')) {
-            if (isset($this->childTypes[$className])) {
-                $className = $this->childTypes[$className];
+        if (property_exists($this, 'childTypeAliases')) {
+            if (isset($this->childTypeAliases[$className])) {
+                $className = $this->childTypeAliases[$className];
             }
         }
 

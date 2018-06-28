@@ -13,7 +13,7 @@ class Vehicle extends Model
         'type', 'driver_id'
     ];
 
-    protected $childTypes = [
+    protected $childTypeAliases = [
         'car' => Car::class
     ];
 
