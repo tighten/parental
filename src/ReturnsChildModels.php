@@ -74,19 +74,37 @@ trait ReturnsChildModels
 
     public function getInhertanceColumn()
     {
-        return $this->inheritanceColumn ?: 'type';
+        return $this->childTypeColumn ?: 'type';
     }
 
     protected function getChildModel(array $attributes)
     {
-        $className = $attributes[$this->getInhertanceColumn()];
+        $className = $this->classFromAlias(
+            $attributes[$this->getInhertanceColumn()]
+        );
 
+        return new $className((array)$attributes);
+    }
+
+    protected function classFromAlias($aliasOrClass)
+    {
         if (property_exists($this, 'childTypeAliases')) {
-            if (isset($this->childTypeAliases[$className])) {
-                $className = $this->childTypeAliases[$className];
+            if (isset($this->childTypeAliases[$aliasOrClass])) {
+                return $this->childTypeAliases[$aliasOrClass];
             }
         }
 
-        return new $className((array)$attributes);
+        return $aliasOrClass;
+    }
+
+    protected function classToAlias($className)
+    {
+        if (property_exists($this, 'childTypeAliases')) {
+            if (in_array($className, $this->childTypeAliases)) {
+                return array_search($className, $this->childTypeAliases);
+            }
+        }
+
+        return $className;
     }
 }

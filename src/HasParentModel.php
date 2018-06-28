@@ -14,7 +14,7 @@ trait HasParentModel
         static::creating(function ($model) {
             if ($model->parentHasReturnsChildModelsTrait()) {
                 $model->forceFill(
-                    [$model->getInhertanceColumn() => get_class($model)]
+                    [$model->getInhertanceColumn() => $model->classToAlias(get_class($model))]
                 );
             }
         });
@@ -23,7 +23,7 @@ trait HasParentModel
             $instance = new static;
 
             if ($instance->parentHasReturnsChildModelsTrait()) {
-                $query->where($instance->getInhertanceColumn(), get_class($instance));
+                $query->where($instance->getInhertanceColumn(), $instance->classToAlias(get_class($instance)));
             }
         });
     }

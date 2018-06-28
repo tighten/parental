@@ -88,3 +88,41 @@ User::all();
 
 ### What's happening?
 Before, when we just added the `HasParentModel`, we got half-way there. That enabled us to find, retreive, and use the `Admin` model, instead of the `User` model. However, this is only one side of the equation. Before, if we ran: `User::first()` we would only get back `User` models. By simply adding the `ReturnsChildModels` to the `User` model, now running `User::first()` will return an instance of whatever model, that `User` is supposed to be. To accomplish this sort polymorphic behavior, we need to use a `type` column on the `users` table to keep track of what model instance to return from User queries.
+
+## Type Aliases
+If for some reason you don't want to store raw class names in the type column, you can override them using the `$childTypeAliases` property.
+
+```php
+use Tightenco\Parental\ReturnsChildModels;
+
+class User extends Model
+{
+    use ReturnsChildModels;
+
+    protected $childTypeAliases = [
+        'admin' => App\Admin::class,
+    ];
+}
+```
+
+Now, running `Admin::create()` will set the `type` column in the `users` table to `admin` instead of `App\Admin`.
+
+This feature is useful for those who are already using a type column with a different naming scheme, or those who don't want to store application classes directly in the database.
+
+## Custom Type Column
+You can override the default type column by setting the `$childTypeColumn` property on the parent model.
+
+```php
+use Tightenco\Parental\ReturnsChildModels;
+
+class User extends Model
+{
+    use ReturnsChildModels;
+
+    protected $childTypeColumn = 'parental_type';
+}
+```
+
+---
+
+Thanks to @sschoger for the sick logo design, and @DanielCoulbourne for helping brainstorm the idea on [Twenty Percent Time](http://twentypercent.fm/).

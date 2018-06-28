@@ -9,7 +9,7 @@ class Trip extends Model
 {
     use ReturnsChildModels;
 
-    protected $inheritanceColumn = 'trip_type';
+    protected $childTypeColumn = 'trip_type';
 
     protected $guarded = [];
 
