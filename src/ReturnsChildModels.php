@@ -53,7 +53,7 @@ trait ReturnsChildModels
 
     public function hasMany($related, $foreignKey = null, $localKey = null)
     {
-        return parent::hasMany($related, $foreignKey = null, $localKey = null);
+        return parent::hasMany($related, $foreignKey, $localKey);
     }
 
     public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null, $parentKey = null, $relatedKey = null, $relation = null)
