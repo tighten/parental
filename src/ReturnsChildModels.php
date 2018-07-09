@@ -86,7 +86,7 @@ trait ReturnsChildModels
         return new $className((array)$attributes);
     }
 
-    protected function classFromAlias($aliasOrClass)
+    public function classFromAlias($aliasOrClass)
     {
         if (property_exists($this, 'childTypeAliases')) {
             if (isset($this->childTypeAliases[$aliasOrClass])) {
@@ -97,7 +97,7 @@ trait ReturnsChildModels
         return $aliasOrClass;
     }
 
-    protected function classToAlias($className)
+    public function classToAlias($className)
     {
         if (property_exists($this, 'childTypeAliases')) {
             if (in_array($className, $this->childTypeAliases)) {
