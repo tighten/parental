@@ -47,7 +47,7 @@ trait HasParentModel
         return Str::snake(class_basename($this->getParentClass())).'_'.$this->primaryKey;
     }
 
-    public function joiningTable($related)
+    public function joiningTable($related, $instance = null)
     {
         $relatedClassName = method_exists((new $related), 'getClassNameForRelationships')
             ? (new $related)->getClassNameForRelationships()
