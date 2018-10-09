@@ -67,6 +67,8 @@ use Tightenco\Parental\ReturnsChildModels;
 class User extends Model
 {
     use ReturnsChildModels;
+    
+    protected $fillable = ['type'];
 }
 ```
 
@@ -98,6 +100,8 @@ use Tightenco\Parental\ReturnsChildModels;
 class User extends Model
 {
     use ReturnsChildModels;
+    
+    protected $fillable = ['type'];
 
     protected $childTypeAliases = [
         'admin' => App\Admin::class,
@@ -118,6 +122,8 @@ use Tightenco\Parental\ReturnsChildModels;
 class User extends Model
 {
     use ReturnsChildModels;
+    
+    protected $fillable = ['parental_type'];
 
     protected $childTypeColumn = 'parental_type';
 }
