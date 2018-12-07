@@ -2,7 +2,11 @@
 
 # Parental
 
-Parental is an early-stage development, alpha Laravel package by Tighten that brings STI (Single Table Inheritance) capabilities to Eloquent.
+Parental is a Laravel package, developed by Tighten, that brings STI (Single Table Inheritance) capabilities to Eloquent.
+
+### What is single table inheritance (STI)?
+
+It's a fancy name for a simple concept: Extending a model (usually to add specific behavior), but referencing the same table.
 
 ## Installation
 
@@ -12,120 +16,119 @@ composer require "tightenco/parental=0.5"
 
 ## Simple Usage
 
-1. Create "child" model: ex. `Admin.php`
-1. Extend "parent" model: ex. `User.php`
-1. Add `HasParent` trait to `Admin.php`
+```php
+// The "parent"
+class User extends Model
+{
+    //
+}
+```
 
 ```php
-use Tightenco\Parental\HasParent;
-
+// The "child"
 class Admin extends User
 {
-    use HasParent;
+    use \Tightenco\Parental\HasParent;
+
+    public function impersonate($user) {
+        ...
+    }
 }
 ```
 
 ```php
 // Returns "Admin" model, but reference "users" table:
-Admin::first();
+$admin = Admin::first();
+
+// Can now access behavior exclusive to "Admin"s
+$admin->impersonate($user);
 ```
 
-### What's happening?
-Laravel performs some internal magic to derive the table name and field names from each model's class name. For example, calling `Admin::first()`, even though Admin extends User, would throw an error because it would be looking for an `admins` table. Fortunately, you can manually set a `protected $table = 'users'` property on the Admin model to override this behavior. Unfortunately, it's difficult to do something similar for foreign key names, and pivot column / table names.
+### What problem did we just solve?
+Without Parental, calling `Admin::first()` would throw an error because Laravel would be looking for an `admins` table. Laravel generates expected table names, as well as foreign keys and pivot table names, using the model's class name. By adding the `HasParent` trait to the Admin model, Laravel will now reference the parent model's class name `users`.
 
-By adding the `HasParent` class to your Admin model, all the hard work is done automatically. `Admin::first()` will look in the parent User model's table, but return the proper Admin model.
-
-## Next-level Usage
-
-1. Create "child/children" models: ex. `Admin.php`, `Manager.php`
-1. Extend "parent" model: ex. `User.php`
-1. Add `type` column to `users` table
-1. Add `HasParent` trait to `Admin.php`, `Manager.php`
-1. Add `HasChildren` trait to `User.php`
+## Accessing Child Models from Parents
 
 ```php
-use Tightenco\Parental\HasParent;
-
-class Admin extends User
-{
-    use HasParent;
-}
+// First, we need to create a `type` column on the `users` table
+Schema::table('users', function ($table) {
+    $table->string('type')->nullable();
+});
 ```
 
 ```php
-use Tightenco\Parental\HasParent;
-
-class Manager extends User
-{
-    use HasParent;
-}
-```
-
-```php
-use Tightenco\Parental\HasChildren;
-
+// The "parent"
 class User extends Model
 {
-    use HasChildren;
+    use Tightenco\Parental\HasChildren;
 
     protected $fillable = ['type'];
 }
 ```
 
 ```php
-// In users table migration:
-$table->string('type')->nullable();
+// A "child"
+class Admin extends User
+{
+    use Tightenco\Parental\HasParent;
+}
 ```
+
+```php
+// Another "child"
+class Guest extends User
+{
+    use Tightenco\Parental\HasParent;
+}
+```
+
 
 ```php
 // Adds row to "users" table with "type" column set to: "App/Admin"
 Admin::create(...);
 
-// Adds row to "users" table with "type" column set to: "App/Manager"
-Manager::create(...);
+// Adds row to "users" table with "type" column set to: "App/Guest"
+Guest::create(...);
 
-// Returns 2 model instances: Admin, and Manager
+// Returns 2 model instances: Admin, and Guest
 User::all();
 ```
 
-### What's happening?
-Before, when we just added the `HasParent`, we got half-way there. That enabled us to find, retreive, and use the `Admin` model, instead of the `User` model. However, this is only one side of the equation. Before, if we ran: `User::first()` we would only get back `User` models. By simply adding the `HasChildren` to the `User` model, now running `User::first()` will return an instance of whatever model, that `User` is supposed to be. To accomplish this sort polymorphic behavior, we need to use a `type` column on the `users` table to keep track of what model instance to return from User queries.
+### What problem did we just solve?
+Before, if we ran: `User::first()` we would only get back `User` models. By adding the `HasChildren` trait and a `type` column to the `users` table, running `User::first()` will return an instance of the child model (`Admin` or `Guest` in this case).
 
 ## Type Aliases
-If for some reason you don't want to store raw class names in the type column, you can override them using the `$childTypeAliases` property.
+If you don't want to store raw class names in the type column, you can override them using the `$childTypes` property.
 
 ```php
-use Tightenco\Parental\HasChildren;
-
 class User extends Model
 {
-    use HasChildren;
+    use Tightenco\Parental\HasChildren;
 
     protected $fillable = ['type'];
 
-    protected $childTypeAliases = [
+    protected $childTypes = [
         'admin' => App\Admin::class,
+        'guest' => App\Guest::class,
     ];
 }
 ```
 
 Now, running `Admin::create()` will set the `type` column in the `users` table to `admin` instead of `App\Admin`.
 
-This feature is useful for those who are already using a type column with a different naming scheme, or those who don't want to store application classes directly in the database.
+This feature is useful if you are working with an existing type column, or if you want to decouple application details from your database.
 
-## Custom Type Column
-You can override the default type column by setting the `$childTypeColumn` property on the parent model.
+## Custom Type Column Name
+You can override the default type column by setting the `$childColumn` property on the parent model.
 
 ```php
-use Tightenco\Parental\HasChildren;
-
 class User extends Model
 {
-    use HasChildren;
+    use Tightenco\Parental\HasChildren;
 
     protected $fillable = ['parental_type'];
 
-    protected $childTypeColumn = 'parental_type';
+    protected $childColumn = 'parental_type';
 }
 ```
 

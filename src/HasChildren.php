@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 
 trait HasChildren
 {
-    protected $HasChildren = true;
+    protected $hasChildren = true;
 
     public function newInstance($attributes = [], $exists = false)
     {
@@ -40,7 +40,7 @@ trait HasChildren
     {
         $instance = $this->newRelatedInstance($related);
 
-        if (is_null($foreignKey) && $instance->HasParent) {
+        if (is_null($foreignKey) && $instance->hasParent) {
             $foreignKey = Str::snake($instance->getClassNameForRelationships()).'_'.$instance->getKeyName();
         }
 
@@ -60,7 +60,7 @@ trait HasChildren
     {
         $instance = $this->newRelatedInstance($related);
 
-        if (is_null($table) && $instance->HasParent) {
+        if (is_null($table) && $instance->hasParent) {
             $table = $this->joiningTable($instance->getClassNameForRelationships());
         }
 
@@ -74,7 +74,7 @@ trait HasChildren
 
     public function getInhertanceColumn()
     {
-        return $this->childTypeColumn ?: 'type';
+        return $this->childField ?: 'type';
     }
 
     protected function getChildModel(array $attributes)
@@ -88,9 +88,9 @@ trait HasChildren
 
     public function classFromAlias($aliasOrClass)
     {
-        if (property_exists($this, 'childTypeAliases')) {
-            if (isset($this->childTypeAliases[$aliasOrClass])) {
-                return $this->childTypeAliases[$aliasOrClass];
+        if (property_exists($this, 'childTypes')) {
+            if (isset($this->childTypes[$aliasOrClass])) {
+                return $this->childTypes[$aliasOrClass];
             }
         }
 
@@ -99,9 +99,9 @@ trait HasChildren
 
     public function classToAlias($className)
     {
-        if (property_exists($this, 'childTypeAliases')) {
-            if (in_array($className, $this->childTypeAliases)) {
-                return array_search($className, $this->childTypeAliases);
+        if (property_exists($this, 'childTypes')) {
+            if (in_array($className, $this->childTypes)) {
+                return array_search($className, $this->childTypes);
             }
         }
 

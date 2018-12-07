@@ -7,7 +7,7 @@ use ReflectionClass;
 
 trait HasParent
 {
-    public $HasParent = true;
+    public $hasParent = true;
 
     public static function bootHasParent()
     {
@@ -30,7 +30,7 @@ trait HasParent
 
     public function parentHasHasChildrenTrait()
     {
-        return $this->HasChildren ?? false;
+        return $this->hasChildren ?? false;
     }
 
     public function getTable()

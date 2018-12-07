@@ -26,7 +26,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     /** @test */
     function type_column_values_can_accept_type_aliases()
     {
-        // Looks for "childTypeAliases" property on Vehicle class.
+        // Looks for "childTypes" property on Vehicle class.
         Car::create(['type' => 'car']);
         Plane::create(['type' => Plane::class]);
 

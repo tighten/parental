@@ -9,7 +9,7 @@ class Trip extends Model
 {
     use HasChildren;
 
-    protected $childTypeColumn = 'trip_type';
+    protected $childField = 'trip_type';
 
     protected $guarded = [];
 
