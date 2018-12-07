@@ -4,9 +4,9 @@ namespace Tightenco\Parental;
 
 use Illuminate\Support\Str;
 
-trait ReturnsChildModels
+trait HasChildren
 {
-    protected $returnsChildModels = true;
+    protected $HasChildren = true;
 
     public function newInstance($attributes = [], $exists = false)
     {
@@ -40,7 +40,7 @@ trait ReturnsChildModels
     {
         $instance = $this->newRelatedInstance($related);
 
-        if (is_null($foreignKey) && $instance->hasParentModel) {
+        if (is_null($foreignKey) && $instance->HasParent) {
             $foreignKey = Str::snake($instance->getClassNameForRelationships()).'_'.$instance->getKeyName();
         }
 
@@ -60,7 +60,7 @@ trait ReturnsChildModels
     {
         $instance = $this->newRelatedInstance($related);
 
-        if (is_null($table) && $instance->hasParentModel) {
+        if (is_null($table) && $instance->HasParent) {
             $table = $this->joiningTable($instance->getClassNameForRelationships());
         }
 

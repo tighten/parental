@@ -3,10 +3,10 @@
 namespace Tightenco\Parental\Tests\Unit;
 
 use Illuminate\Database\Eloquent\Model;
-use Tightenco\Parental\HasParentModel;
+use Tightenco\Parental\HasParent;
 use Tightenco\Parental\Tests\TestCase;
 
-class HasParentModelTest extends TestCase
+class HasParentTest extends TestCase
 {
     /** @test */
     function child_model_has_table_name_of_parent_model()
@@ -40,7 +40,7 @@ class ParentModel extends Model {
 }
 
 class ChildModel extends ParentModel {
-    use HasParentModel;
+    use HasParent;
 }
 
 class ChildModelWithoutTrait extends ParentModel {

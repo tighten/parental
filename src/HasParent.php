@@ -5,14 +5,14 @@ namespace Tightenco\Parental;
 use Illuminate\Support\Str;
 use ReflectionClass;
 
-trait HasParentModel
+trait HasParent
 {
-    public $hasParentModel = true;
+    public $HasParent = true;
 
-    public static function bootHasParentModel()
+    public static function bootHasParent()
     {
         static::creating(function ($model) {
-            if ($model->parentHasReturnsChildModelsTrait()) {
+            if ($model->parentHasHasChildrenTrait()) {
                 $model->forceFill(
                     [$model->getInhertanceColumn() => $model->classToAlias(get_class($model))]
                 );
@@ -22,15 +22,15 @@ trait HasParentModel
         static::addGlobalScope(function ($query) {
             $instance = new static;
 
-            if ($instance->parentHasReturnsChildModelsTrait()) {
+            if ($instance->parentHasHasChildrenTrait()) {
                 $query->where($instance->getInhertanceColumn(), $instance->classToAlias(get_class($instance)));
             }
         });
     }
 
-    public function parentHasReturnsChildModelsTrait()
+    public function parentHasHasChildrenTrait()
     {
-        return $this->returnsChildModels ?? false;
+        return $this->HasChildren ?? false;
     }
 
     public function getTable()

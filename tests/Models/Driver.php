@@ -3,11 +3,11 @@
 namespace Tightenco\Parental\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Tightenco\Parental\ReturnsChildModels;
+use Tightenco\Parental\HasChildren;
 
 class Driver extends Model
 {
-    use ReturnsChildModels;
+    use HasChildren;
 
     protected $guarded = [];
 

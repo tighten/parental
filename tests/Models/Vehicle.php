@@ -3,11 +3,11 @@
 namespace Tightenco\Parental\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Tightenco\Parental\ReturnsChildModels;
+use Tightenco\Parental\HasChildren;
 
 class Vehicle extends Model
 {
-    use ReturnsChildModels;
+    use HasChildren;
 
     protected $fillable = [
         'type', 'driver_id'

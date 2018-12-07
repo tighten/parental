@@ -2,9 +2,9 @@
 
 namespace Tightenco\Parental\Tests\Models;
 
-use Tightenco\Parental\HasParentModel;
+use Tightenco\Parental\HasParent;
 
 class Admin extends User
 {
-    use HasParentModel;
+    use HasParent;
 }

@@ -2,9 +2,9 @@
 
 namespace Tightenco\Parental\Tests\Models;
 
-use Tightenco\Parental\HasParentModel;
+use Tightenco\Parental\HasParent;
 
 class Plane extends Vehicle
 {
-    use HasParentModel;
+    use HasParent;
 }

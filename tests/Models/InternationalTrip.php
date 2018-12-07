@@ -3,9 +3,9 @@
 namespace Tightenco\Parental\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Tightenco\Parental\HasParentModel;
+use Tightenco\Parental\HasParent;
 
 class InternationalTrip extends Trip
 {
-    use HasParentModel;
+    use HasParent;
 }

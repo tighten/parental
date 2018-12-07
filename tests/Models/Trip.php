@@ -3,11 +3,11 @@
 namespace Tightenco\Parental\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Tightenco\Parental\ReturnsChildModels;
+use Tightenco\Parental\HasChildren;
 
 class Trip extends Model
 {
-    use ReturnsChildModels;
+    use HasChildren;
 
     protected $childTypeColumn = 'trip_type';
 
