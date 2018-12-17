@@ -10,7 +10,7 @@ trait HasChildren
 
     public function newInstance($attributes = [], $exists = false)
     {
-        $model = isset($attributes[$this->getInhertanceColumn()])
+        $model = isset($attributes[$this->getInheritanceColumn()])
             ? $this->getChildModel($attributes)
             : new static(((array) $attributes));
 
@@ -72,15 +72,15 @@ trait HasChildren
         return class_basename($this);
     }
 
-    public function getInhertanceColumn()
+    public function getInheritanceColumn()
     {
-        return $this->childField ?: 'type';
+        return $this->childColumn ?: 'type';
     }
 
     protected function getChildModel(array $attributes)
     {
         $className = $this->classFromAlias(
-            $attributes[$this->getInhertanceColumn()]
+            $attributes[$this->getInheritanceColumn()]
         );
 
         return new $className((array)$attributes);
