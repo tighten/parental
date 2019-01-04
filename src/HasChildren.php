@@ -8,12 +8,13 @@ trait HasChildren
 {
     protected $hasChildren = true;
 
-    public static function observe($classes)
+    protected static function registerModelEvent($event, $callback)
     {
-        parent::observe($classes);
+        parent::registerModelEvent($event, $callback);
+
         if (static::class === self::class && property_exists(self::class, 'childTypes')) {
             foreach ((new self)->childTypes as $childClass) {
-                $childClass::observe($classes);
+                $childClass::registerModelEvent($event, $callback);
             }
         }
     }

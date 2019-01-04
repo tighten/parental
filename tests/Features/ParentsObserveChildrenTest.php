@@ -21,6 +21,9 @@ class ParentsObserveChildrenTest extends TestCase
 
         $vehicle = Vehicle::create();
         $this->assertEquals(1, $vehicle->driver_id);
+
+        $train = Train::create();
+        $this->assertNull($train->driver_id);
     }
 
     /** @test */
@@ -45,5 +48,39 @@ class ParentsObserveChildrenTest extends TestCase
         Car::observe(CarObserver::class);
         $vehicle = Vehicle::create();
         $this->assertEmpty($vehicle->driver_id);
+    }
+
+    /** @test */
+    public function register_events_on_children_through_parent()
+    {
+        Vehicle::created(function ($vehicle) {
+            $vehicle->driver_id = 3;
+        });
+
+        $car = Car::create();
+        $this->assertEquals(3, $car->driver_id);
+
+        $vehicle = Vehicle::create();
+        $this->assertEquals(3, $vehicle->driver_id);
+
+        $train = Train::create();
+        $this->assertNull($train->driver_id);
+    }
+
+    /** @test */
+    public function registering_events_on_child_doesnt_affect_parent()
+    {
+        Car::created(function ($vehicle) {
+            $vehicle->driver_id = 3;
+        });
+
+        $car = Car::create();
+        $this->assertEquals(3, $car->driver_id);
+
+        $vehicle = Vehicle::create();
+        $this->assertNull($vehicle->driver_id);
+
+        $train = Train::create();
+        $this->assertNull($train->driver_id);
     }
 }
