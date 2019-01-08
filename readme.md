@@ -132,6 +132,20 @@ class User extends Model
 }
 ```
 
+## Laravel Nova Support
+If you want to use share parent Nova resources with child models, you may register the following provider at the end of the boot method of your NovaServiceProvider:
+
+```php
+class NovaServiceProvider extends NovaApplicationServiceProvider
+{
+    public function boot() {
+        parent::boot();
+        // ...
+        $this->app->register(\Tightenco\Parental\Providers\NovaResourceProvider::class);
+    }
+}
+```
+
 ---
 
 Thanks to [@sschoger](https://twitter.com/steveschoger) for the sick logo design, and [@DanielCoulbourne](https://twitter.com/DCoulbourne) for helping brainstorm the idea on [Twenty Percent Time](http://twentypercent.fm/).

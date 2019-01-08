@@ -107,4 +107,9 @@ trait HasChildren
 
         return $className;
     }
+
+    public function getChildTypes()
+    {
+        return property_exists($this, 'childTypes') ? $this->childTypes : [];
+    }
 }
