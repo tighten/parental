@@ -8,6 +8,17 @@ trait HasChildren
 {
     protected $hasChildren = true;
 
+    protected static function registerModelEvent($event, $callback)
+    {
+        parent::registerModelEvent($event, $callback);
+
+        if (static::class === self::class && property_exists(self::class, 'childTypes')) {
+            foreach ((new self)->childTypes as $childClass) {
+                $childClass::registerModelEvent($event, $callback);
+            }
+        }
+    }
+
     public function newInstance($attributes = [], $exists = false)
     {
         $model = isset($attributes[$this->getInheritanceColumn()])
