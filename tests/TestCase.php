@@ -69,6 +69,7 @@ class TestCase extends BaseTestCase
 
         Schema::create('parts', function ($table) {
             $table->increments('id');
+            $table->string('type')->nullable();
             $table->timestamps();
         });
 
