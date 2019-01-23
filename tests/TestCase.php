@@ -66,5 +66,17 @@ class TestCase extends BaseTestCase
             $table->increments('id');
             $table->timestamps();
         });
+
+        Schema::create('parts', function ($table) {
+            $table->increments('id');
+            $table->timestamps();
+        });
+
+        Schema::create('vehicle_parts', function ($table) {
+            $table->increments('id');
+            $table->integer('part_id');
+            $table->morphs('partable');
+            $table->timestamps();
+        });
     }
 }

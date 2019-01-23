@@ -33,4 +33,9 @@ class Vehicle extends Model
     {
         return $this->belongsToMany(Trip::class);
     }
+
+    public function parts()
+    {
+        return $this->morphToMany(Part::class, 'partable', 'vehicle_parts');
+    }
 }
