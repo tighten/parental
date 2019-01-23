@@ -145,6 +145,23 @@ class PolymorphismTest extends TestCase
         $vehicle->parts()->create(['type' => 'some']);
         $vehicle->parts()->create(['type' => 'other']);
 
+        // This already works today, but it's pretty ugly
+        $passenger = Passenger::query()->where(function ($query) {
+            $query->orWhereHas('car.parts', function ($query) {
+                $query->where('type', 'tire');
+            })->orWhereHas('vehicle.parts', function ($query) {
+                $query->where('type', 'tire');
+            });
+        })->first();
+
+        $this->assertNotNull($passenger);
+        $this->assertTrue($joe->is($passenger));
+        $this->assertTrue($car->is($passenger->vehicle));
+        $this->assertInstanceOf(Car::class, $passenger->vehicle);
+
+        unset($passenger);
+
+        // This works with the new version
         $passenger = Passenger::query()->whereHas('vehicle.parts', function ($query) {
             $query->where('type', 'tire');
         })->first();
