@@ -70,10 +70,11 @@ trait HasParent
 
     public function getMorphClass()
     {
-        if ($this->parentHasHasChildrenTrait() && in_array(static::class, $this->getChildTypes())) {
+        if ($this->parentHasHasChildrenTrait()) {
             $parentClass = $this->getParentClass();
             return (new $parentClass)->getMorphClass();
         }
+
         return parent::getMorphClass();
     }
 
