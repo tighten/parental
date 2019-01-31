@@ -68,6 +68,15 @@ trait HasParent
         return class_basename($this->getParentClass());
     }
 
+    public function getMorphClass()
+    {
+        if ($this->parentHasHasChildrenTrait() && in_array(static::class, $this->getChildTypes())) {
+            $parentClass = $this->getParentClass();
+            return (new $parentClass)->getMorphClass();
+        }
+        return parent::getMorphClass();
+    }
+
     protected function getParentClass()
     {
         static $parentClassName;
