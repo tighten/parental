@@ -85,7 +85,7 @@ trait HasChildren
 
     public function getInheritanceColumn()
     {
-        return $this->childColumn ?: 'type';
+        return property_exists($this, 'childColumn') ? $this->childColumn : 'type';
     }
 
     protected function getChildModel(array $attributes)
