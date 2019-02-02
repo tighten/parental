@@ -42,10 +42,12 @@ class ParentScope
     public static function addMissingChildren(string $parent)
     {
         return function (Builder $builder) use ($parent) {
-            $instance = new $parent;
+            if (! isset(static::$registered[$parent])) {
+                return;
+            }
 
-            $registeredChildren = isset(static::$registered[$parent]) ? static::$registered[$parent] : [];
-            $missingChildren = array_diff($instance->getChildTypes(), $registeredChildren);
+            $instance = new $parent;
+            $missingChildren = array_diff($instance->getChildTypes(), static::$registered[$parent]);
 
             $builder->orWhereIn($instance->getInheritanceColumn(), array_keys($missingChildren))
                     ->orWhereNull($instance->getInheritanceColumn());
