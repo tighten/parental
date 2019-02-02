@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Scope;
 
 class ParentScope
 {
-    private $child;
-    private $implementation;
+    protected $child;
+    protected $implementation;
 
     protected static $registered = [];
 
@@ -19,7 +19,7 @@ class ParentScope
         $this->implementation = $implementation;
     }
 
-    protected function apply(Builder $builder) : void
+    protected function apply(Builder $builder)
     {
         $builder->orWhere($this->child->getInheritanceColumn(), $this->child->classToAlias(get_class($this->child)));
 
