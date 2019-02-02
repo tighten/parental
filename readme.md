@@ -14,6 +14,15 @@ It's a fancy name for a simple concept: Extending a model (usually to add specif
 composer require "tightenco/parental=0.6"
 ```
 
+Each time you add or remove child classes, you'll want to do the following:
+```bash
+php artisan parental:discover-children
+```
+
+This artisan command will simplify the following:
+- Laravel Nova resource inheritance (when children don't already have a dedicated Nova resource)
+- Adding child global scopes when querying parent
+
 ## Simple Usage
 
 ```php
@@ -129,20 +138,6 @@ class User extends Model
     protected $fillable = ['parental_type'];
 
     protected $childColumn = 'parental_type';
-}
-```
-
-## Laravel Nova Support
-If you want to use share parent Nova resources with child models, you may register the following provider at the end of the boot method of your NovaServiceProvider:
-
-```php
-class NovaServiceProvider extends NovaApplicationServiceProvider
-{
-    public function boot() {
-        parent::boot();
-        // ...
-        $this->app->register(\Tightenco\Parental\Providers\NovaResourceProvider::class);
-    }
 }
 ```
 
