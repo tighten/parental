@@ -33,7 +33,7 @@ class ParentModelInheritsChildrenScopes extends TestCase
     }
 
     /** @test */
-    public function child_scopes_apply_on_parent_queries_for_given_child()
+    public function child_scopes_apply_on_parent_queries()
     {
         $this->createTenTrips();
 
