@@ -51,11 +51,11 @@ trait HasChildren
     {
         $instance = $this->newRelatedInstance($related);
 
-        if (is_null($foreignKey) && $instance->hasParent) {
+        if ($foreignKey === null && $instance->hasParent) {
             $foreignKey = Str::snake($instance->getClassNameForRelationships()).'_'.$instance->getKeyName();
         }
 
-        if (is_null($relation)) {
+        if ($relation === null) {
             $relation = $this->guessBelongsToRelation();
         }
 
@@ -71,7 +71,7 @@ trait HasChildren
     {
         $instance = $this->newRelatedInstance($related);
 
-        if (is_null($table) && $instance->hasParent) {
+        if ($table === null && $instance->hasParent) {
             $table = $this->joiningTable($instance->getClassNameForRelationships());
         }
 
