@@ -26,8 +26,6 @@ class DiscoverChildren extends Command
 
     public function handle()
     {
-        $children = $this->findChildren();
-
         if (! file_exists(config_path('parental.php'))) {
             $this->files->put(
                 config_path('parental.php'),
@@ -36,7 +34,7 @@ class DiscoverChildren extends Command
         }
 
         $content = $this->files->get(config_path('parental.php'));
-        $asString  = "'discovered_children' => ".var_export($children, true).', //just an anchor';
+        $asString  = "'discovered_children' => ".var_export($this->findChildren(), true).', //just an anchor';
 
         $content = preg_replace("/\'discovered_children\' => .*, \/\/just an anchor/", $asString, $content);
 
