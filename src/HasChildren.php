@@ -8,12 +8,24 @@ trait HasChildren
 {
     protected $hasChildren = true;
 
+    public static function bootHasChildren()
+    {
+        if (static::class === self::class) {
+            foreach ((new self)->getChildTypes() as $childClass) {
+                // Just booting all the child classes to "inherit" their global scopes
+                new $childClass;
+            }
+
+            static::addGlobalScope('remainingChildrenScope', ParentScope::addMissingChildren(self::class));
+        }
+    }
+
     protected static function registerModelEvent($event, $callback)
     {
         parent::registerModelEvent($event, $callback);
 
-        if (static::class === self::class && property_exists(self::class, 'childTypes')) {
-            foreach ((new self)->childTypes as $childClass) {
+        if (static::class === self::class) {
+            foreach ((new self)->getChildTypes() as $childClass) {
                 $childClass::registerModelEvent($event, $callback);
             }
         }
@@ -94,15 +106,14 @@ trait HasChildren
             $attributes[$this->getInheritanceColumn()]
         );
 
-        return new $className((array)$attributes);
+        return new $className((array) $attributes);
     }
 
     public function classFromAlias($aliasOrClass)
     {
-        if (property_exists($this, 'childTypes')) {
-            if (isset($this->childTypes[$aliasOrClass])) {
-                return $this->childTypes[$aliasOrClass];
-            }
+        $types = $this->getChildTypes();
+        if (isset($types[$aliasOrClass])) {
+            return $types[$aliasOrClass];
         }
 
         return $aliasOrClass;
@@ -110,10 +121,8 @@ trait HasChildren
 
     public function classToAlias($className)
     {
-        if (property_exists($this, 'childTypes')) {
-            if (in_array($className, $this->childTypes)) {
-                return array_search($className, $this->childTypes);
-            }
+        if (in_array($className, $this->getChildTypes())) {
+            return array_search($className, $this->getChildTypes());
         }
 
         return $className;
@@ -121,6 +130,9 @@ trait HasChildren
 
     public function getChildTypes()
     {
-        return property_exists($this, 'childTypes') ? $this->childTypes : [];
+        return array_flip(array_merge(
+            config('parental.discovered_children.'.self::class, []),
+            array_flip(property_exists($this, 'childTypes') ? $this->childTypes : [])
+        ));
     }
 }

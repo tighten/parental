@@ -23,7 +23,7 @@ class ParentsObserveChildrenTest extends TestCase
         $this->assertEquals(1, $vehicle->driver_id);
 
         $train = Train::create();
-        $this->assertNull($train->driver_id);
+        $this->assertEquals(1, $train->driver_id);
     }
 
     /** @test */
@@ -64,7 +64,7 @@ class ParentsObserveChildrenTest extends TestCase
         $this->assertEquals(3, $vehicle->driver_id);
 
         $train = Train::create();
-        $this->assertNull($train->driver_id);
+        $this->assertEquals(3, $train->driver_id);
     }
 
     /** @test */

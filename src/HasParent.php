@@ -19,13 +19,27 @@ trait HasParent
             }
         });
 
-        static::addGlobalScope(function ($query) {
+        static::addGlobalScope('parental', function ($query) {
             $instance = new static;
 
             if ($instance->parentHasHasChildrenTrait()) {
                 $query->where($instance->getInheritanceColumn(), $instance->classToAlias(get_class($instance)));
             }
         });
+    }
+
+    public static function addGlobalScope($scope, \Closure $implementation = null)
+    {
+        $implementation = parent::addGlobalScope($scope, $implementation);
+        $key = array_search($implementation, static::$globalScopes[static::class]);
+        $child = new static;
+
+        if ($scope !== 'parental' && $child->parentHasHasChildrenTrait()) {
+            $parent = $child->getParentClass();
+            $parent::addGlobalScope(static::class.':'.$key, ParentScope::passToParent($parent, $child, $implementation));
+        }
+
+        return $implementation;
     }
 
     public function parentHasHasChildrenTrait()

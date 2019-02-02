@@ -4,6 +4,8 @@ namespace Tightenco\Parental\Tests;
 
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use Tightenco\Parental\Commands\DiscoverChildren;
+use Tightenco\Parental\Tests\Models\Vehicle;
 
 class TestCase extends BaseTestCase
 {
@@ -25,6 +27,10 @@ class TestCase extends BaseTestCase
             'database' => ':memory:',
             'prefix'   => '',
         ]);
+
+        config()->set('parental.model_directories', __DIR__.'/Models');
+        $children = $app->make(DiscoverChildren::class)->findChildren();
+        config()->set('parental.discovered_children', array_merge(config('parental.discovered_children', []), $children));
     }
 
     public function runMigrations()
