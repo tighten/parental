@@ -51,6 +51,7 @@ class TestCase extends BaseTestCase
         Schema::create('trips', function ($table) {
             $table->increments('id');
             $table->integer('trip_type')->nullable();
+            $table->integer('duration')->default(1);
             $table->timestamps();
         });
 

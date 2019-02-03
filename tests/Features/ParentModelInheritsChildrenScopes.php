@@ -15,7 +15,7 @@ class ParentModelInheritsChildrenScopes extends TestCase
         $this->createTenTrips();
 
         $this->assertEquals(10, Trip::query()->count());
-        $this->assertCount(2, (new Trip)->getGlobalScopes());
+        $this->assertCount(1, (new Trip)->getGlobalScopes());
     }
 
     /** @test */
@@ -29,7 +29,8 @@ class ParentModelInheritsChildrenScopes extends TestCase
         });
 
         $this->assertEquals(10, Trip::query()->count());
-        $this->assertCount(3, (new Trip)->getGlobalScopes());
+        $this->assertCount(1, (new Trip)->getGlobalScopes());
+        $this->assertCount(2, (new LocalTrip)->getGlobalScopes());
     }
 
     /** @test */
@@ -42,26 +43,44 @@ class ParentModelInheritsChildrenScopes extends TestCase
         });
 
         $this->assertEquals(8, Trip::query()->count());
-        $this->assertCount(3, (new Trip)->getGlobalScopes());
+        $this->assertCount(1, (new Trip)->getGlobalScopes());
+        $this->assertCount(2, (new LocalTrip)->getGlobalScopes());
 
         $localTrip = LocalTrip::query()->first();
 
         $this->assertEquals(9, $localTrip->getKey());
     }
 
+    /** @test */
+    public function can_modify_query()
+    {
+        $this->createTenTrips();
+
+        LocalTrip::addGlobalScope(function ($q) {
+            $q->whereKey(9);
+        });
+
+        $trips = Trip::query()->where('duration', '>=', 3)->get();
+
+        $this->assertCount(3, $trips);
+        $this->assertInstanceOf(Trip::class, $trips->shift());
+        $this->assertInstanceOf(Trip::class, $trips->shift());
+        $this->assertInstanceOf(InternationalTrip::class, $trips->shift());
+    }
+
     private function createTenTrips()
     {
-        Trip::query()->create();
-        Trip::query()->create();
-        Trip::query()->create();
-        Trip::query()->create();
+        Trip::query()->create(['duration' => 1]);
+        Trip::query()->create(['duration' => 2]);
+        Trip::query()->create(['duration' => 3]);
+        Trip::query()->create(['duration' => 4]);
 
-        InternationalTrip::query()->create();
-        InternationalTrip::query()->create();
-        InternationalTrip::query()->create();
+        InternationalTrip::query()->create(['duration' => 1]);
+        InternationalTrip::query()->create(['duration' => 2]);
+        InternationalTrip::query()->create(['duration' => 3]);
 
-        LocalTrip::query()->create();
-        LocalTrip::query()->create();
-        LocalTrip::query()->create();
+        LocalTrip::query()->create(['duration' => 1]);
+        LocalTrip::query()->create(['duration' => 2]);
+        LocalTrip::query()->create(['duration' => 3]);
     }
 }

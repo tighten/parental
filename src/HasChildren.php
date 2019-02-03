@@ -12,11 +12,11 @@ trait HasChildren
     {
         if (static::class === self::class) {
             foreach ((new self)->getChildTypes() as $childClass) {
-                // Just booting all the child classes to "inherit" their global scopes
+                // Just booting all the child classes to make sure their base global scopes get registered
                 new $childClass;
             }
 
-            static::addGlobalScope('remainingChildrenScope', ParentScope::addMissingChildren(self::class));
+            static::addGlobalScope(new ParentScope);
         }
     }
 
