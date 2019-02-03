@@ -19,18 +19,20 @@ class ParentScope implements Scope
         $builder->where(function (Builder $builder) use ($parent) {
             $childColumn = $parent->getInheritanceColumn();
 
-            foreach (static::$registered[get_class($parent)] as $alias => $implementations) {
-                foreach ($implementations as $implementation) {
-                    $builder->orWhere(function (Builder $builder) use ($childColumn, $alias, $implementation) {
-                        $builder->where($childColumn, $alias);
+            $existingImplementations = $parent->getGlobalScopes();
 
-                        if ($implementation instanceof \Closure) {
-                            ($implementation)($builder);
-                        } elseif ($implementation instanceof Scope) {
-                            $implementation->apply($builder, $builder->getModel());
+            foreach (static::$registered[get_class($parent)] as $alias => $implementations) {
+                $builder->orWhere(function (Builder $builder) use ($alias, $childColumn, $implementations, $existingImplementations) {
+                    $builder->where($childColumn, $alias);
+
+                    foreach ($implementations as $key => $implementation) {
+                        if (array_has($existingImplementations, str_replace($alias.':', '', $key))) {
+                            continue;
                         }
-                    });
-                }
+
+                        $this->applyImplementation($builder, $implementation);
+                    }
+                });
             }
 
             $builder->orWhere(function (Builder $builder) use ($parent, $childColumn) {
@@ -41,8 +43,19 @@ class ParentScope implements Scope
         });
     }
 
-    public static function registerChild(Model $child, $implementation)
+    protected function applyImplementation(Builder $builder, $implementation)
     {
-        static::$registered[get_parent_class($child)][$child->classToAlias(get_class($child))][] = $implementation;
+        $builder->where(function (Builder $builder) use ($implementation) {
+            if ($implementation instanceof \Closure) {
+                ($implementation)($builder);
+            } elseif ($implementation instanceof Scope) {
+                $implementation->apply($builder, $builder->getModel());
+            }
+        });
+    }
+
+    public static function registerChild(Model $child, string $key, $implementation)
+    {
+        static::$registered[get_parent_class($child)][$child->classToAlias(get_class($child))][$key] = $implementation;
     }
 }

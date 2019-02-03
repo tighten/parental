@@ -34,7 +34,9 @@ trait HasParent
         $child = new static;
 
         if ($scope !== 'parental' && $child->parentHasHasChildrenTrait()) {
-            ParentScope::registerChild($child, $implementation);
+            $key = array_search($implementation, static::$globalScopes[static::class]);
+            $key = $child->classToAlias(static::class).':'.$key;
+            ParentScope::registerChild($child, $key, $implementation);
         }
 
         return $implementation;

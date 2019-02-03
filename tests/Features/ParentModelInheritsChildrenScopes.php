@@ -15,7 +15,7 @@ class ParentModelInheritsChildrenScopes extends TestCase
         $this->createTenTrips();
 
         $this->assertEquals(10, Trip::query()->count());
-        $this->assertCount(1, (new Trip)->getGlobalScopes());
+        $this->assertCount(2, (new Trip)->getGlobalScopes());
     }
 
     /** @test */
@@ -29,8 +29,8 @@ class ParentModelInheritsChildrenScopes extends TestCase
         });
 
         $this->assertEquals(10, Trip::query()->count());
-        $this->assertCount(1, (new Trip)->getGlobalScopes());
-        $this->assertCount(2, (new LocalTrip)->getGlobalScopes());
+        $this->assertCount(2, (new Trip)->getGlobalScopes());
+        $this->assertCount(3, (new LocalTrip)->getGlobalScopes());
     }
 
     /** @test */
@@ -43,8 +43,8 @@ class ParentModelInheritsChildrenScopes extends TestCase
         });
 
         $this->assertEquals(8, Trip::query()->count());
-        $this->assertCount(1, (new Trip)->getGlobalScopes());
-        $this->assertCount(2, (new LocalTrip)->getGlobalScopes());
+        $this->assertCount(2, (new Trip)->getGlobalScopes());
+        $this->assertCount(3, (new LocalTrip)->getGlobalScopes());
 
         $localTrip = LocalTrip::query()->first();
 

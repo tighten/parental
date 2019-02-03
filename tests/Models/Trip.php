@@ -13,6 +13,15 @@ class Trip extends Model
 
     protected $guarded = [];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('verification', function ($query) {
+            $query->whereNotNull(static::CREATED_AT);
+        });
+    }
+
     public function vehicles()
     {
         return $this->belongsToMany(Vehicle::class);
