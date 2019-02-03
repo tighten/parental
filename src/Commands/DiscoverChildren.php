@@ -8,37 +8,25 @@ use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\Finder\Finder;
 use Tightenco\Parental\HasChildren;
 use Tightenco\Parental\HasParent;
-use Illuminate\Contracts\Filesystem\Filesystem;
 
 class DiscoverChildren extends Command
 {
-    protected $files;
-
     protected $signature = 'parental:discover-children';
 
     protected $description = 'Discover the child models of parent classes using the HasChildren trait.';
 
-    public function __construct(Filesystem $files)
-    {
-        parent::__construct();
-        $this->files = $files;
-    }
-
     public function handle()
     {
         if (! file_exists(config_path('parental.php'))) {
-            $this->files->put(
-                config_path('parental.php'),
-                $this->files->get(__DIR__.'/../../config/parental.php')
-            );
+            file_put_contents(config_path('parental.php'), file_get_contents(__DIR__.'/../../config/parental.php'));
         }
 
-        $content = $this->files->get(config_path('parental.php'));
+        $content = file_get_contents(config_path('parental.php'));
         $asString  = "'discovered_children' => ".var_export($this->findChildren(), true).', //just an anchor';
 
         $content = preg_replace("/\'discovered_children\' => .*, \/\/just an anchor/", $asString, $content);
 
-        $this->files->put(config_path('parental.php'), $content);
+        file_put_contents(config_path('parental.php'), $content);
 
         return true;
     }
