@@ -18,7 +18,7 @@ class Trip extends Model
         parent::boot();
 
         static::addGlobalScope('verification', function ($query) {
-            $query->whereNotNull(static::CREATED_AT);
+            $query->whereNotNull('trips.id');
         });
     }
 
