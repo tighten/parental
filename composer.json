@@ -25,5 +25,12 @@
         "psr-4": {
             "Tightenco\\Parental\\Tests\\": "tests/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tightenco\\Parental\\Providers\\ParentalServiceProvider"
+            ]
+        }
     }
 }
