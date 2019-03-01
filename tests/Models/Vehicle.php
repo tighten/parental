@@ -19,6 +19,15 @@ class Vehicle extends Model
 
     protected $guarded = [];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            $model->boot_count = $model->boot_count ? $model->boot_count + 1 : 1;
+        });
+    }
+
     public function driver()
     {
         return $this->belongsTo(Driver::class);

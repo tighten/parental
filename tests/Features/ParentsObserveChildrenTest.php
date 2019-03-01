@@ -83,4 +83,14 @@ class ParentsObserveChildrenTest extends TestCase
         $train = Train::create();
         $this->assertNull($train->driver_id);
     }
+
+    /** @test */
+    public function registering_events_in_parent_boot_only_triggers_once()
+    {
+        $vehicle = Vehicle::create();
+        $this->assertEquals(1, $vehicle->boot_count);
+
+        $car = Car::create();
+        $this->assertEquals(1, $car->boot_count);
+    }
 }
