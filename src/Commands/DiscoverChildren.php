@@ -19,7 +19,7 @@ class DiscoverChildren extends Command
     {
         file_put_contents(
             __DIR__.'/../../discovered-children.php',
-            '<?php'.PHP_EOL.PHP_EOL.var_export($this->findChildren(), true).';'.PHP_EOL
+            '<?php'.PHP_EOL.PHP_EOL.'return '.var_export($this->findChildren(), true).';'.PHP_EOL
         );
 
         return true;
