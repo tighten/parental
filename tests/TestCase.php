@@ -5,7 +5,6 @@ namespace Tightenco\Parental\Tests;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Tightenco\Parental\Commands\DiscoverChildren;
-use Tightenco\Parental\Tests\Models\Vehicle;
 
 class TestCase extends BaseTestCase
 {
