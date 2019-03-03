@@ -2,14 +2,28 @@
 
 namespace Tightenco\Parental\Tests;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use Tightenco\Parental\Commands\DiscoverChildren;
+use Tightenco\Parental\Providers\ParentalServiceProvider;
 
 class TestCase extends BaseTestCase
 {
     public function setUp() : void
     {
+        if (! $this->app) {
+            $this->afterApplicationCreated(function () {
+                $this->app->register(ParentalServiceProvider::class);
+
+                config()->set('parental.model_directories', array_merge(config('parental.model_directories', []), [__DIR__.'/Models']));
+                Artisan::call('parental:discover-children');
+            });
+
+            $this->beforeApplicationDestroyed(function () {
+                file_put_contents(__DIR__.'/../discovered-children.php', '<?php'.PHP_EOL.PHP_EOL.'return [];'.PHP_EOL);
+            });
+        }
+
         parent::setUp();
 
         $this->runMigrations();
@@ -26,10 +40,6 @@ class TestCase extends BaseTestCase
             'database' => ':memory:',
             'prefix'   => '',
         ]);
-
-        config()->set('parental.model_directories', __DIR__.'/Models');
-        $children = $app->make(DiscoverChildren::class)->findChildren();
-        config()->set('parental.discovered_children', array_merge(config('parental.discovered_children', []), $children));
     }
 
     public function runMigrations()
