@@ -17,16 +17,10 @@ class DiscoverChildren extends Command
 
     public function handle()
     {
-        if (! file_exists(config_path('parental.php'))) {
-            file_put_contents(config_path('parental.php'), file_get_contents(__DIR__.'/../../config/parental.php'));
-        }
-
-        $content = file_get_contents(config_path('parental.php'));
-        $asString  = "'discovered_children' => ".var_export($this->findChildren(), true).', //just an anchor';
-
-        $content = preg_replace("/\'discovered_children\' => .*, \/\/just an anchor/", $asString, $content);
-
-        file_put_contents(config_path('parental.php'), $content);
+        file_put_contents(
+            __DIR__.'/../../discovered-children.php',
+            '<?php'.PHP_EOL.PHP_EOL.var_export($this->findChildren(), true).PHP_EOL
+        );
 
         return true;
     }

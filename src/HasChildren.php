@@ -2,6 +2,7 @@
 
 namespace Tightenco\Parental;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 trait HasChildren
@@ -131,7 +132,7 @@ trait HasChildren
     public function getChildTypes()
     {
         return array_flip(array_merge(
-            config('parental.discovered_children.'.self::class, []),
+            Arr::get(require __DIR__.'/../discovered-children.php', self::class, []),
             array_flip(property_exists($this, 'childTypes') ? $this->childTypes : [])
         ));
     }
