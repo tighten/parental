@@ -9,26 +9,34 @@ use Tightenco\Parental\Providers\ParentalServiceProvider;
 
 class TestCase extends BaseTestCase
 {
+    protected static $initialChildren = '';
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        static::$initialChildren = file_get_contents(__DIR__.'/../discovered-children.php');
+    }
+
     public function setUp() : void
     {
-        if (! $this->app) {
-            $this->afterApplicationCreated(function () {
-                $this->app->register(ParentalServiceProvider::class);
-
-                config()->set('parental.model_directories', array_merge(config('parental.model_directories', []), [__DIR__.'/Models']));
-                Artisan::call('parental:discover-children');
-            });
-
-            $this->beforeApplicationDestroyed(function () {
-                file_put_contents(__DIR__.'/../discovered-children.php', '<?php'.PHP_EOL.PHP_EOL.'return [];'.PHP_EOL);
-            });
-        }
-
         parent::setUp();
 
         $this->runMigrations();
 
         $this->withFactories(__DIR__ . '/factories');
+
+        $this->app->register(ParentalServiceProvider::class);
+
+        config()->set('parental.model_directories', array_merge(config('parental.model_directories', []), [__DIR__.'/Models']));
+        Artisan::call('parental:discover-children');
+    }
+
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+
+        file_put_contents(__DIR__.'/../discovered-children.php', static::$initialChildren);
     }
 
     protected function getEnvironmentSetUp($app)
