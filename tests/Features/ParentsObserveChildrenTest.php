@@ -83,4 +83,76 @@ class ParentsObserveChildrenTest extends TestCase
         $train = Train::create();
         $this->assertNull($train->driver_id);
     }
+
+    /**
+     * This test works when being run alone, but somehow doesn't when the entire file is being run. The following test
+     * includes all the logic of the previous tests, without the assertions, and the assertions work as intended.
+     *
+     * @test
+     */
+    public function registering_events_in_parent_boot_only_triggers_once()
+    {
+        $car = Car::query()->create();
+        $this->assertEquals(1, $car->boot_count);
+        $this->assertEquals(1, $car->boot_count_two);
+
+        $vehicle = Vehicle::query()->create();
+        $this->assertEquals(1, $vehicle->boot_count);
+        $this->assertEquals(1, $vehicle->boot_count_two);
+
+        $train = Train::query()->create();
+        $this->assertEquals(1, $train->boot_count);
+        $this->assertEquals(1, $train->boot_count_two);
+    }
+
+    /**
+     * This test just includes all the logic from the previous tests, and runs correctly. The other test assertions have
+     * been removed.
+     *
+     * @test
+     */
+    public function registering_events_in_parent_boot_only_triggers_once_bis()
+    {
+        Vehicle::observe(VehicleObserver::class);
+        $car = Car::create();
+        $vehicle = Vehicle::create();
+        $train = Train::create();
+
+        Car::observe(CarObserver::class);
+        $car = Car::create();
+
+        Car::observe(CarObserver::class);
+        $train = Train::create();
+
+        Car::observe(CarObserver::class);
+        $vehicle = Vehicle::create();
+
+        Vehicle::created(function ($vehicle) {
+            $vehicle->driver_id = 3;
+        });
+
+        $car = Car::create();
+        $vehicle = Vehicle::create();
+        $train = Train::create();
+
+        Car::created(function ($vehicle) {
+            $vehicle->driver_id = 3;
+        });
+
+        $car = Car::create();
+        $vehicle = Vehicle::create();
+        $train = Train::create();
+
+        $car = Car::query()->create();
+        $this->assertEquals(1, $car->boot_count);
+        $this->assertEquals(1, $car->boot_count_two);
+
+        $vehicle = Vehicle::query()->create();
+        $this->assertEquals(1, $vehicle->boot_count);
+        $this->assertEquals(1, $vehicle->boot_count_two);
+
+        $train = Train::query()->create();
+        $this->assertEquals(1, $train->boot_count);
+        $this->assertEquals(1, $train->boot_count_two);
+    }
 }

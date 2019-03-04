@@ -7,11 +7,17 @@ use Illuminate\Support\Str;
 
 trait HasChildren
 {
+    protected static $parentWasBooted = false;
+
     protected $hasChildren = true;
 
     public static function bootHasChildren()
     {
         if (static::class === self::class) {
+            static::registerModelEvent('booted', function () {
+                self::$parentWasBooted = true;
+            });
+
             foreach ((new self)->getChildTypes() as $childClass) {
                 // Just booting all the child classes to make sure their base global scopes get registered
                 new $childClass;
@@ -23,9 +29,18 @@ trait HasChildren
 
     protected static function registerModelEvent($event, $callback)
     {
+        // We're booting the parent in case we're directly registering an event from somewhere while the parent hasn't
+        // been booted yet to enable propagation of the event to the children (Model::created() doesn't create a Model
+        // instance so we're forcing it)
+        if (! self::$parentWasBooted) {
+            new self;
+        }
+
         parent::registerModelEvent($event, $callback);
 
-        if (static::class === self::class) {
+        // We don't want to register the callbacks that happen in the boot method of the parent, as they'll be called
+        // from the child's boot method as well.
+        if (static::class === self::class && self::$parentWasBooted) {
             foreach ((new self)->getChildTypes() as $childClass) {
                 $childClass::registerModelEvent($event, $callback);
             }
