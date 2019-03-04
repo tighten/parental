@@ -7,17 +7,14 @@ use Illuminate\Support\Str;
 
 trait HasChildren
 {
-    protected static $parentWasBooted = false;
+    private static $parentBootMethods;
+    private static $discoveredChildren;
 
     protected $hasChildren = true;
 
     public static function bootHasChildren()
     {
         if (static::class === self::class) {
-            static::registerModelEvent('booted', function () {
-                self::$parentWasBooted = true;
-            });
-
             foreach ((new self)->getChildTypes() as $childClass) {
                 // Just booting all the child classes to make sure their base global scopes get registered
                 new $childClass;
@@ -29,22 +26,40 @@ trait HasChildren
 
     protected static function registerModelEvent($event, $callback)
     {
-        // We're booting the parent in case we're directly registering an event from somewhere while the parent hasn't
-        // been booted yet to enable propagation of the event to the children (Model::created() doesn't create a Model
-        // instance so we're forcing it)
-        if (! self::$parentWasBooted) {
-            new self;
-        }
-
         parent::registerModelEvent($event, $callback);
 
         // We don't want to register the callbacks that happen in the boot method of the parent, as they'll be called
         // from the child's boot method as well.
-        if (static::class === self::class && self::$parentWasBooted) {
+        if (static::class === self::class && ! self::parentIsBooting()) {
             foreach ((new self)->getChildTypes() as $childClass) {
                 $childClass::registerModelEvent($event, $callback);
             }
         }
+    }
+
+    private static function parentIsBooting()
+    {
+        if (! isset(self::$parentBootMethods)) {
+            self::$parentBootMethods[] = 'boot';
+
+            foreach (class_uses_recursive(self::class) as $trait) {
+                self::$parentBootMethods[] = 'boot'.class_basename($trait);
+            }
+
+            self::$parentBootMethods = array_flip(self::$parentBootMethods);
+        }
+
+        // Limit to 32 as I don't think we need to go any deeper (even 10 is probably enough)
+        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 32) as $trace) {
+            $class = isset($trace['class']) ? $trace['class'] : null;
+            $function = isset($trace['function']) ? $trace['function'] : '';
+
+            if ($class === self::class && isset(self::$parentBootMethods[$function])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function newInstance($attributes = [], $exists = false)
@@ -147,8 +162,17 @@ trait HasChildren
     public function getChildTypes()
     {
         return array_flip(array_merge(
-            Arr::get(require __DIR__.'/../discovered-children.php', self::class, []),
+            $this->getDiscoveredChildren(),
             array_flip(property_exists($this, 'childTypes') ? $this->childTypes : [])
         ));
+    }
+
+    private function getDiscoveredChildren() : array
+    {
+        if (! isset(self::$discoveredChildren)) {
+            self::$discoveredChildren = Arr::get(require __DIR__.'/../discovered-children.php', self::class, []);
+        }
+
+        return self::$discoveredChildren;
     }
 }
