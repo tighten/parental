@@ -191,7 +191,9 @@ trait HasChildren
     private function getDiscoveredChildren() : array
     {
         if (! isset(self::$discoveredChildren)) {
-            self::$discoveredChildren = Arr::get(require __DIR__.'/../discovered-children.php', self::class, []);
+            self::$discoveredChildren = file_exists(config('parental.discovered_children_path'))
+                ? Arr::get(require config('parental.discovered_children_path'), self::class, [])
+                : [];
         }
 
         return self::$discoveredChildren;
