@@ -15,7 +15,7 @@ class TestCase extends BaseTestCase
     {
         parent::setUpBeforeClass();
 
-        static::$initialChildren = file_get_contents(__DIR__.'/../discovered-children.php');
+        static::$initialChildren = file_get_contents(__DIR__.'/discovered-children.php');
     }
 
     public function setUp() : void
@@ -28,6 +28,7 @@ class TestCase extends BaseTestCase
 
         $this->app->register(ParentalServiceProvider::class);
 
+        config()->set('parental.discovered_children_path', __DIR__.'/discovered-children.php');
         config()->set('parental.model_directories', array_merge(config('parental.model_directories', []), [__DIR__.'/Models']));
         Artisan::call('parental:discover-children');
     }
@@ -36,7 +37,7 @@ class TestCase extends BaseTestCase
     {
         parent::tearDownAfterClass();
 
-        file_put_contents(__DIR__.'/../discovered-children.php', static::$initialChildren);
+        file_put_contents(__DIR__.'/discovered-children.php', static::$initialChildren);
     }
 
     protected function getEnvironmentSetUp($app)
