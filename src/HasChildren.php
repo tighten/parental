@@ -3,7 +3,6 @@
 namespace Tightenco\Parental;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 trait HasChildren
 {
@@ -96,42 +95,6 @@ trait HasChildren
         $model->fireModelEvent('retrieved', false);
 
         return $model;
-    }
-
-    public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
-    {
-        $instance = $this->newRelatedInstance($related);
-
-        if ($foreignKey === null && $instance->hasParent) {
-            $foreignKey = Str::snake($instance->getClassNameForRelationships()).'_'.$instance->getKeyName();
-        }
-
-        if ($relation === null) {
-            $relation = $this->guessBelongsToRelation();
-        }
-
-        return parent::belongsTo($related, $foreignKey, $ownerKey, $relation);
-    }
-
-    public function hasMany($related, $foreignKey = null, $localKey = null)
-    {
-        return parent::hasMany($related, $foreignKey, $localKey);
-    }
-
-    public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null, $parentKey = null, $relatedKey = null, $relation = null)
-    {
-        $instance = $this->newRelatedInstance($related);
-
-        if ($table === null && $instance->hasParent) {
-            $table = $this->joiningTable($instance->getClassNameForRelationships());
-        }
-
-        return parent::belongsToMany($related, $table, $foreignPivotKey, $relatedPivotKey, $parentKey, $relatedKey, $relation);
-    }
-
-    public function getClassNameForRelationships()
-    {
-        return class_basename($this);
     }
 
     public function getInheritanceColumn()

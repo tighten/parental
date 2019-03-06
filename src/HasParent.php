@@ -61,25 +61,17 @@ trait HasParent
         return Str::snake(class_basename($this->getParentClass())).'_'.$this->primaryKey;
     }
 
-    public function joiningTable($related, $instance = null)
+    public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null,
+                                  $parentKey = null, $relatedKey = null, $relation = null)
     {
-        $relatedClassName = method_exists((new $related), 'getClassNameForRelationships')
-            ? (new $related)->getClassNameForRelationships()
-            : class_basename($related);
+        $parentClass = $this->getParentClass();
+        $method = $this->guessBelongsToManyRelation();
 
-        $models = [
-            Str::snake($relatedClassName),
-            Str::snake($this->getClassNameForRelationships()),
-        ];
+        if (! method_exists($parentClass, $method) || null !== $table) {
+            return parent::belongsToMany($related, $table, $foreignPivotKey, $relatedPivotKey, $parentKey, $relatedKey, $relation);
+        }
 
-        sort($models);
-
-        return strtolower(implode('_', $models));
-    }
-
-    public function getClassNameForRelationships()
-    {
-        return class_basename($this->getParentClass());
+        return parent::belongsToMany($related, (new $parentClass)->joiningTable($related), $foreignPivotKey, $relatedPivotKey, $parentKey, $relatedKey, $relation);
     }
 
     public function getMorphClass()
