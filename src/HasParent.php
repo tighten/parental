@@ -12,6 +12,7 @@ trait HasParent
     public static function bootHasParent()
     {
         static::creating(function ($model) {
+            /** @var HasParent|HasChildren|\Illuminate\Database\Eloquent\Model $model */
             if ($model->parentHasHasChildrenTrait()) {
                 $model->forceFill(
                     [$model->getInheritanceColumn() => $model->classToAlias(get_class($model))]
