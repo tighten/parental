@@ -15,6 +15,13 @@ trait HasChildren
     public static function bootHasChildren()
     {
         if (static::class === self::class) {
+            static::creating(function ($model) {
+                /** @var HasChildren $model */
+                if ($model->{$model->getInheritanceColumn()} === null && $parentAlias = $model->getParentAlias()) {
+                    $model->{$model->getInheritanceColumn()} = $parentAlias;
+                }
+            });
+
             foreach ((new self)->getChildTypes() as $childClass) {
                 // Just booting all the child classes to make sure their base global scopes get registered
                 new $childClass;
@@ -32,6 +39,7 @@ trait HasChildren
         // from the child's boot method as well.
         if (static::class === self::class && ! self::parentIsBooting()) {
             foreach ((new self)->getChildTypes() as $childClass) {
+                /** @var \Illuminate\Database\Eloquent\Model $childClass */
                 $childClass::registerModelEvent($event, $callback);
             }
         }
@@ -142,6 +150,10 @@ trait HasChildren
 
     public function classFromAlias($aliasOrClass)
     {
+        if ($aliasOrClass === $this->getParentAlias()) {
+            return self::class;
+        }
+
         $types = $this->getChildTypes();
         if (isset($types[$aliasOrClass])) {
             return $types[$aliasOrClass];
@@ -152,11 +164,20 @@ trait HasChildren
 
     public function classToAlias($className)
     {
+        if ($className === self::class) {
+            return $this->getParentAlias();
+        }
+
         if (in_array($className, $this->getChildTypes())) {
             return array_search($className, $this->getChildTypes());
         }
 
         return $className;
+    }
+
+    public function getParentAlias()
+    {
+        return property_exists($this, 'parentType') ? $this->parentType : null;
     }
 
     public function getChildTypes()
