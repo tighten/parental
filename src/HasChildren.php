@@ -13,7 +13,9 @@ trait HasChildren
 
     protected function initializeHasChildren()
     {
-        $this->setAttribute($this->getInheritanceColumn(), $this->classToAlias(static::class));
+        if ($alias = $this->classToAlias(static::class)) {
+            $this->setAttribute($this->getInheritanceColumn(), $alias);
+        }
     }
 
     public static function bootHasChildren()
