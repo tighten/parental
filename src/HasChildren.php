@@ -11,6 +11,11 @@ trait HasChildren
 
     protected $hasChildren = true;
 
+    protected function initializeHasChildren()
+    {
+        $this->setAttribute($this->getInheritanceColumn(), $this->classToAlias(static::class));
+    }
+
     public static function bootHasChildren()
     {
         if (static::class === self::class) {
