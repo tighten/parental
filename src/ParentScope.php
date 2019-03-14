@@ -39,6 +39,7 @@ class ParentScope implements Scope
             $builder->orWhere(function (Builder $builder) use ($parent, $childColumn) {
                 $missingChildren = array_diff_key($parent->getChildTypes(), static::$registered[get_class($parent)]);
                 $builder->orWhereIn($childColumn, array_keys($missingChildren))
+                        ->orWhere($childColumn, $parent->getParentAlias())
                         ->orWhereNull($childColumn);
             });
         });
