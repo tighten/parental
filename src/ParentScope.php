@@ -5,6 +5,7 @@ namespace Tightenco\Parental;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
+use Illuminate\Support\Arr;
 
 class ParentScope implements Scope
 {
@@ -26,7 +27,7 @@ class ParentScope implements Scope
                     $builder->where($childColumn, $alias);
 
                     foreach ($implementations as $key => $implementation) {
-                        if (array_has($existingImplementations, str_replace($alias.':', '', $key))) {
+                        if (Arr::has($existingImplementations, str_replace($alias.':', '', $key))) {
                             continue;
                         }
 
