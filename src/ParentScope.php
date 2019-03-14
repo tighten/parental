@@ -11,6 +11,11 @@ class ParentScope implements Scope
 {
     protected static $registered = [];
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @param \Illuminate\Database\Eloquent\Model|\Tightenco\Parental\HasChildren $parent
+     * @return void
+     */
     public function apply(Builder $builder, Model $parent)
     {
         if (! isset(static::$registered[get_class($parent)])) {
@@ -56,6 +61,11 @@ class ParentScope implements Scope
         });
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Model|\Tightenco\Parental\HasParent|\Tightenco\Parental\HasChildren $child
+     * @param string $key
+     * @param $implementation
+     */
     public static function registerChild(Model $child, string $key, $implementation)
     {
         static::$registered[get_parent_class($child)][$child->classToAlias(get_class($child))][$key] = $implementation;
