@@ -6,6 +6,8 @@ use Illuminate\Support\Str;
 
 trait HasChildren
 {
+    protected static $parentBootMethods;
+
     protected $hasChildren = true;
 
     protected static function registerModelEvent($event, $callback)
@@ -13,10 +15,38 @@ trait HasChildren
         parent::registerModelEvent($event, $callback);
 
         if (static::class === self::class && property_exists(self::class, 'childTypes')) {
-            foreach ((new self)->childTypes as $childClass) {
-                $childClass::registerModelEvent($event, $callback);
+            // We don't want to register the callbacks that happen in the boot method of the parent, as they'll be called
+            // from the child's boot method as well.
+            if (! self::parentIsBooting()) {
+                foreach ((new self)->childTypes as $childClass) {
+                    $childClass::registerModelEvent($event, $callback);
+                }
             }
         }
+    }
+
+    protected static function parentIsBooting()
+    {
+        if (! isset(self::$parentBootMethods)) {
+            self::$parentBootMethods[] = 'boot';
+
+            foreach (class_uses_recursive(self::class) as $trait) {
+                self::$parentBootMethods[] = 'boot'.class_basename($trait);
+            }
+
+            self::$parentBootMethods = array_flip(self::$parentBootMethods);
+        }
+
+        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $trace) {
+            $class = isset($trace['class']) ? $trace['class'] : null;
+            $function = isset($trace['function']) ? $trace['function'] : '';
+
+            if ($class === self::class && isset(self::$parentBootMethods[$function])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function newInstance($attributes = [], $exists = false)
