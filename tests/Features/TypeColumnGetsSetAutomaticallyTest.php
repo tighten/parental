@@ -8,7 +8,7 @@ use Tightenco\Parental\Tests\Models\InternationalTrip;
 use Tightenco\Parental\Tests\Models\Trip;
 use Tightenco\Parental\Tests\TestCase;
 
-class TypeColumnGetsSetAutomatically extends TestCase
+class TypeColumnGetsSetAutomaticallyTest extends TestCase
 {
     /** @test */
     function type_column_gets_set_on_creation()

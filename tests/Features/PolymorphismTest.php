@@ -76,7 +76,7 @@ class PolymorphismTest extends TestCase
     public function can_query_deeply_from_parental_models_to_morphed_via_where_has()
     {
         $car = Car::create();
-        $passenger = $car->passengers()->create(['name' => 'joe']);
+        $car->passengers()->create(['name' => 'joe']);
         $car->parts()->create(['type' => 'tire']);
 
         $passenger = Passenger::query()->whereHas('vehicle.parts', function ($query) {
