@@ -7,7 +7,7 @@ use Tightenco\Parental\Tests\Models\Plane;
 use Tightenco\Parental\Tests\Models\Vehicle;
 use Tightenco\Parental\Tests\TestCase;
 
-class TypeColumnCanBeAliased extends TestCase
+class TypeColumnCanBeAliasedTest extends TestCase
 {
     /** @test */
     function type_column_values_can_accept_type_aliases()
