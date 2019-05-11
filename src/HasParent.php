@@ -3,6 +3,7 @@
 namespace Tightenco\Parental;
 
 use Illuminate\Support\Str;
+use Illuminate\Events\Dispatcher;
 use ReflectionClass;
 
 trait HasParent
@@ -11,6 +12,9 @@ trait HasParent
 
     public static function bootHasParent()
     {
+        if (static::getEventDispatcher() === null) {
+            static::setEventDispatcher(new Dispatcher());
+        }
         static::creating(function ($model) {
             if ($model->parentHasHasChildrenTrait()) {
                 $model->forceFill(
