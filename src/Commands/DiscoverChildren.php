@@ -5,7 +5,6 @@ namespace Tightenco\Parental\Commands;
 use hanneskod\classtools\Iterator\ClassIterator;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
 use Tightenco\Parental\HasChildren;
@@ -19,9 +18,10 @@ class DiscoverChildren extends Command
 
     public function handle()
     {
-        $contents = '<?php'.PHP_EOL.PHP_EOL.'return '.var_export($this->findChildren(), true).';'.PHP_EOL;
-
-        Storage::disk('local')->put($this->path(), $contents);
+        file_put_contents(
+            $this->path(),
+            '<?php'.PHP_EOL.PHP_EOL.'return '.var_export($this->findChildren(), true).';'.PHP_EOL
+        );
 
         return true;
     }
