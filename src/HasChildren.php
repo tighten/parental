@@ -16,6 +16,10 @@ trait HasChildren
         if ($alias = $this->classToAlias(static::class)) {
             $this->setAttribute($this->getInheritanceColumn(), $alias);
         }
+
+        if (! empty($this->getGuarded())) {
+            $this->fillable(array_merge([$this->getInheritanceColumn()], $this->getFillable()));
+        }
     }
 
     public static function bootHasChildren()
@@ -93,7 +97,7 @@ trait HasChildren
 
     public function newFromBuilder($attributes = [], $connection = null)
     {
-        $model = $this->newInstance((array) $attributes, true);
+        $model = $this->newInstance(Arr::only((array) $attributes, $this->getInheritanceColumn()), true);
 
         $model->setRawAttributes((array) $attributes, true);
 

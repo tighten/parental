@@ -4,6 +4,8 @@ namespace Tightenco\Parental\Tests\Features;
 
 use Tightenco\Parental\Tests\Models\Car;
 use Tightenco\Parental\Tests\Models\Driver;
+use Tightenco\Parental\Tests\Models\GuardedChild;
+use Tightenco\Parental\Tests\Models\GuardedParent;
 use Tightenco\Parental\Tests\Models\Passenger;
 use Tightenco\Parental\Tests\Models\Plane;
 use Tightenco\Parental\Tests\Models\Vehicle;
@@ -11,6 +13,14 @@ use Tightenco\Parental\Tests\TestCase;
 
 class ParentsAreAwareOfChildrenTest extends TestCase
 {
+    /** @test */
+    public function something()
+    {
+        $v = new GuardedParent;
+        $this->assertInstanceOf(GuardedParent::class, $v->newFromBuilder(['id' => 123]));
+        $this->assertInstanceOf(GuardedChild::class, $v->newFromBuilder(['id' => 123, 'type' => 'child']));
+    }
+
     /** @test */
     function vehicle_all_method_returns_child_models()
     {
