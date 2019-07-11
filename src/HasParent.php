@@ -23,7 +23,7 @@ trait HasParent
             $instance = new static;
 
             if ($instance->parentHasHasChildrenTrait()) {
-                $query->where($instance->getInheritanceColumn(), $instance->classToAlias(get_class($instance)));
+                $query->where($instance->getTable().'.'.$instance->getInheritanceColumn(), $instance->classToAlias(get_class($instance)));
             }
         });
     }
