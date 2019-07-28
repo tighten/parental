@@ -5,6 +5,7 @@ namespace Tightenco\Parental\Commands;
 use hanneskod\classtools\Iterator\ClassIterator;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
 use Tightenco\Parental\HasChildren;
@@ -18,10 +19,16 @@ class DiscoverChildren extends Command
 
     public function handle()
     {
+        $children = $this->findChildren();
+
         file_put_contents(
             $this->path(),
-            '<?php'.PHP_EOL.PHP_EOL.'return '.var_export($this->findChildren(), true).';'.PHP_EOL
+            '<?php'.PHP_EOL.PHP_EOL.'return '.var_export($children, true).';'.PHP_EOL
         );
+
+        $count = count(Arr::flatten($children));
+
+        $this->output->writeln("Parental: Successfully discovered {$count} child classes!");
 
         return true;
     }
