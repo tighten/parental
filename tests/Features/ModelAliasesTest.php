@@ -8,7 +8,7 @@ use Tightenco\Parental\Tests\Models\Trip;
 use Tightenco\Parental\Tests\Models\Vehicle;
 use Tightenco\Parental\Tests\TestCase;
 
-class ModelAliases extends TestCase
+class ModelAliasesTest extends TestCase
 {
     /** @test */
     public function parent_alias_is_null_if_not_defined()

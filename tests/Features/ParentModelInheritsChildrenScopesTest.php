@@ -7,7 +7,7 @@ use Tightenco\Parental\Tests\Models\LocalTrip;
 use Tightenco\Parental\Tests\Models\Trip;
 use Tightenco\Parental\Tests\TestCase;
 
-class ParentModelInheritsChildrenScopes extends TestCase
+class ParentModelInheritsChildrenScopesTest extends TestCase
 {
     /** @test */
     public function simple_scope_inheritance_check()

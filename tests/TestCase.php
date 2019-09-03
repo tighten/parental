@@ -11,7 +11,7 @@ class TestCase extends BaseTestCase
 {
     protected static $initialChildren = '';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         parent::setUpBeforeClass();
 
@@ -33,7 +33,7 @@ class TestCase extends BaseTestCase
         Artisan::call('parental:discover-children');
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         parent::tearDownAfterClass();
 

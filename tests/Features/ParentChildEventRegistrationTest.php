@@ -9,7 +9,7 @@ use Tightenco\Parental\Tests\Observers\CarObserver;
 use Tightenco\Parental\Tests\Observers\VehicleObserver;
 use Tightenco\Parental\Tests\TestCase;
 
-class ParentChildEventRegistration extends TestCase
+class ParentChildEventRegistrationTest extends TestCase
 {
     /** @test */
     public function parent_observer_observes_children()
