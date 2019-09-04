@@ -11,7 +11,7 @@ It's a fancy name for a simple concept: Extending a model (usually to add specif
 ## Installation
 
 ```bash
-composer require "tightenco/parental=0.7"
+composer require "tightenco/parental=0.8"
 ```
 
 ## Simple Usage
