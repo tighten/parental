@@ -19,7 +19,9 @@ trait HasChildren
             // from the child's boot method as well.
             if (! self::parentIsBooting()) {
                 foreach ((new self)->childTypes as $childClass) {
-                    $childClass::registerModelEvent($event, $callback);
+                    if ($childClass !== self::class) {
+                        $childClass::registerModelEvent($event, $callback);
+                    }
                 }
             }
         }
