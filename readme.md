@@ -11,7 +11,7 @@ It's a fancy name for a simple concept: Extending a model (usually to add specif
 ## Installation
 
 ```bash
-composer require "tightenco/parental=0.7"
+composer require "tightenco/parental=0.8"
 ```
 
 ## Simple Usage
@@ -60,7 +60,7 @@ Schema::table('users', function ($table) {
 // The "parent"
 class User extends Model
 {
-    use Tightenco\Parental\HasChildren;
+    use \Tightenco\Parental\HasChildren;
 
     protected $fillable = ['type'];
 }
@@ -70,7 +70,7 @@ class User extends Model
 // A "child"
 class Admin extends User
 {
-    use Tightenco\Parental\HasParent;
+    use \Tightenco\Parental\HasParent;
 }
 ```
 
@@ -78,7 +78,7 @@ class Admin extends User
 // Another "child"
 class Guest extends User
 {
-    use Tightenco\Parental\HasParent;
+    use \Tightenco\Parental\HasParent;
 }
 ```
 
@@ -103,7 +103,7 @@ If you don't want to store raw class names in the type column, you can override 
 ```php
 class User extends Model
 {
-    use Tightenco\Parental\HasChildren;
+    use \Tightenco\Parental\HasChildren;
 
     protected $fillable = ['type'];
 
@@ -124,7 +124,7 @@ You can override the default type column by setting the `$childColumn` property 
 ```php
 class User extends Model
 {
-    use Tightenco\Parental\HasChildren;
+    use \Tightenco\Parental\HasChildren;
 
     protected $fillable = ['parental_type'];
 

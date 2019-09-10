@@ -20,8 +20,9 @@ trait HasChildren
             // We don't want to register the callbacks that happen in the boot method of the parent, as they'll be called
             // from the child's boot method as well.
             if (! self::parentIsBooting()) {
-                foreach ($childTypes as $childClass) {
-                    $childClass::registerModelEvent($event, $callback);
+                    if ($childClass !== self::class) {
+                        $childClass::registerModelEvent($event, $callback);
+                    }
                 }
             }
         }
