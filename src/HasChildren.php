@@ -1,6 +1,6 @@
 <?php
 
-namespace Tightenco\Parental;
+namespace Parental;
 
 use Illuminate\Support\Str;
 

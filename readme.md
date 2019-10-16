@@ -2,7 +2,7 @@
 
 # Parental
 
-Parental is a Laravel package, developed by Tighten, that brings STI (Single Table Inheritance) capabilities to Eloquent.
+Parental is a Laravel package that brings STI (Single Table Inheritance) capabilities to Eloquent.
 
 ### What is single table inheritance (STI)?
 
@@ -11,7 +11,7 @@ It's a fancy name for a simple concept: Extending a model (usually to add specif
 ## Installation
 
 ```bash
-composer require "tightenco/parental=0.8"
+composer require "calebporzio/parental=0.8"
 ```
 
 ## Simple Usage
@@ -28,7 +28,7 @@ class User extends Model
 // The "child"
 class Admin extends User
 {
-    use \Tightenco\Parental\HasParent;
+    use \Parental\HasParent;
 
     public function impersonate($user) {
         ...
@@ -60,7 +60,7 @@ Schema::table('users', function ($table) {
 // The "parent"
 class User extends Model
 {
-    use \Tightenco\Parental\HasChildren;
+    use \Parental\HasChildren;
 
     protected $fillable = ['type'];
 }
@@ -70,7 +70,7 @@ class User extends Model
 // A "child"
 class Admin extends User
 {
-    use \Tightenco\Parental\HasParent;
+    use \Parental\HasParent;
 }
 ```
 
@@ -78,7 +78,7 @@ class Admin extends User
 // Another "child"
 class Guest extends User
 {
-    use \Tightenco\Parental\HasParent;
+    use \Parental\HasParent;
 }
 ```
 
@@ -103,7 +103,7 @@ If you don't want to store raw class names in the type column, you can override 
 ```php
 class User extends Model
 {
-    use \Tightenco\Parental\HasChildren;
+    use \Parental\HasChildren;
 
     protected $fillable = ['type'];
 
@@ -124,7 +124,7 @@ You can override the default type column by setting the `$childColumn` property 
 ```php
 class User extends Model
 {
-    use \Tightenco\Parental\HasChildren;
+    use \Parental\HasChildren;
 
     protected $fillable = ['parental_type'];
 
@@ -141,7 +141,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot() {
         parent::boot();
         // ...
-        $this->app->register(\Tightenco\Parental\Providers\NovaResourceProvider::class);
+        $this->app->register(\Parental\Providers\NovaResourceProvider::class);
     }
 }
 ```

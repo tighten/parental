@@ -1,9 +1,9 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Models;
+namespace Parental\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Tightenco\Parental\HasChildren;
+use Parental\HasChildren;
 
 class Passenger extends Model
 {

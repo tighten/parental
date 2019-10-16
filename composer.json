@@ -1,5 +1,5 @@
 {
-    "name": "tightenco/parental",
+    "name": "calebporzio/parental",
     "description": "A simple eloquent trait that allows relationships to be accessed through child models.",
     "license": "MIT",
     "authors": [
@@ -17,12 +17,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Tightenco\\Parental\\": "src/"
+            "Parental\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tightenco\\Parental\\Tests\\": "tests/"
+            "Parental\\Tests\\": "tests/"
         }
     }
 }

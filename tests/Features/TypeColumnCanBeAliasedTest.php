@@ -1,11 +1,11 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Features;
+namespace Parental\Tests\Features;
 
-use Tightenco\Parental\Tests\Models\Car;
-use Tightenco\Parental\Tests\Models\Plane;
-use Tightenco\Parental\Tests\Models\Vehicle;
-use Tightenco\Parental\Tests\TestCase;
+use Parental\Tests\Models\Car;
+use Parental\Tests\Models\Plane;
+use Parental\Tests\Models\Vehicle;
+use Parental\Tests\TestCase;
 
 class TypeColumnCanBeAliasedTest extends TestCase
 {
