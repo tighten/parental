@@ -51,9 +51,7 @@ trait HasChildren
 
     public function newInstance($attributes = [], $exists = false)
     {
-        $model = isset($attributes[$this->getInheritanceColumn()])
-            ? $this->getChildModel($attributes)
-            : new static(((array) $attributes));
+        $model = $this->getChildModel($attributes);
 
         $model->exists = $exists;
 
@@ -118,11 +116,26 @@ trait HasChildren
         return property_exists($this, 'childColumn') ? $this->childColumn : 'type';
     }
 
-    protected function getChildModel(array $attributes)
+    /**
+     * Override this in order to get the custom class in a custom way, not reading the InheritanceColumn attribute
+     * @param array $attributes
+     * @return mixed
+     */
+    public function getChildClass(array $attributes)
     {
-        $className = $this->classFromAlias(
+
+        if(!isset($attributes[$this->getInheritanceColumn()])){
+            return static::class;
+        };
+
+        return $this->classFromAlias(
             $attributes[$this->getInheritanceColumn()]
         );
+    }
+
+    protected function getChildModel(array $attributes)
+    {
+        $className = $this->getChildClass($attributes);
 
         return new $className((array)$attributes);
     }

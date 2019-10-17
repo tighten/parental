@@ -79,5 +79,14 @@ class TestCase extends BaseTestCase
             $table->morphs('partable');
             $table->timestamps();
         });
+
+        // companies
+
+        Schema::create('companies', function ($table) {
+            $table->increments('id');
+            $table->boolean('is_affiliate')->default(false);
+            $table->timestamps();
+        });
+
     }
 }
