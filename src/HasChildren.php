@@ -2,6 +2,10 @@
 
 namespace Parental;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 trait HasChildren
@@ -10,6 +14,28 @@ trait HasChildren
 
     protected $hasChildren = true;
 
+    /**
+     *
+     */
+    public static function bootHasChildren()
+    {
+
+        static::addGlobalScope(function (Builder $query) {
+
+            if (property_exists(get_called_class(), 'requiredByParental')) {
+
+                $query->select(static::$requiredByParental);
+
+            }
+
+        });
+
+    }
+
+    /**
+     * @param $event
+     * @param $callback
+     */
     protected static function registerModelEvent($event, $callback)
     {
         parent::registerModelEvent($event, $callback);
@@ -17,7 +43,7 @@ trait HasChildren
         if (static::class === self::class && property_exists(self::class, 'childTypes')) {
             // We don't want to register the callbacks that happen in the boot method of the parent, as they'll be called
             // from the child's boot method as well.
-            if (! self::parentIsBooting()) {
+            if (!self::parentIsBooting()) {
                 foreach ((new self)->childTypes as $childClass) {
                     $childClass::registerModelEvent($event, $callback);
                 }
@@ -25,13 +51,16 @@ trait HasChildren
         }
     }
 
+    /**
+     * @return bool
+     */
     protected static function parentIsBooting()
     {
-        if (! isset(self::$parentBootMethods)) {
+        if (!isset(self::$parentBootMethods)) {
             self::$parentBootMethods[] = 'boot';
 
             foreach (class_uses_recursive(self::class) as $trait) {
-                self::$parentBootMethods[] = 'boot'.class_basename($trait);
+                self::$parentBootMethods[] = 'boot' . class_basename($trait);
             }
 
             self::$parentBootMethods = array_flip(self::$parentBootMethods);
@@ -49,6 +78,11 @@ trait HasChildren
         return false;
     }
 
+    /**
+     * @param array $attributes
+     * @param bool $exists
+     * @return mixed
+     */
     public function newInstance($attributes = [], $exists = false)
     {
         $model = $this->getChildModel($attributes);
@@ -62,11 +96,16 @@ trait HasChildren
         return $model;
     }
 
+    /**
+     * @param array $attributes
+     * @param null $connection
+     * @return mixed
+     */
     public function newFromBuilder($attributes = [], $connection = null)
     {
-        $model = $this->newInstance((array) $attributes, true);
+        $model = $this->newInstance((array)$attributes, true);
 
-        $model->setRawAttributes((array) $attributes, true);
+        $model->setRawAttributes((array)$attributes, true);
 
         $model->setConnection($connection ?: $this->getConnectionName());
 
@@ -75,12 +114,19 @@ trait HasChildren
         return $model;
     }
 
+    /**
+     * @param $related
+     * @param null $foreignKey
+     * @param null $ownerKey
+     * @param null $relation
+     * @return BelongsTo
+     */
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
     {
         $instance = $this->newRelatedInstance($related);
 
         if (is_null($foreignKey) && $instance->hasParent) {
-            $foreignKey = Str::snake($instance->getClassNameForRelationships()).'_'.$instance->getKeyName();
+            $foreignKey = Str::snake($instance->getClassNameForRelationships()) . '_' . $instance->getKeyName();
         }
 
         if (is_null($relation)) {
@@ -90,11 +136,27 @@ trait HasChildren
         return parent::belongsTo($related, $foreignKey, $ownerKey, $relation);
     }
 
+    /**
+     * @param $related
+     * @param null $foreignKey
+     * @param null $localKey
+     * @return HasMany
+     */
     public function hasMany($related, $foreignKey = null, $localKey = null)
     {
         return parent::hasMany($related, $foreignKey, $localKey);
     }
 
+    /**
+     * @param $related
+     * @param null $table
+     * @param null $foreignPivotKey
+     * @param null $relatedPivotKey
+     * @param null $parentKey
+     * @param null $relatedKey
+     * @param null $relation
+     * @return BelongsToMany
+     */
     public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null, $parentKey = null, $relatedKey = null, $relation = null)
     {
         $instance = $this->newRelatedInstance($related);
@@ -106,11 +168,17 @@ trait HasChildren
         return parent::belongsToMany($related, $table, $foreignPivotKey, $relatedPivotKey, $parentKey, $relatedKey, $relation);
     }
 
+    /**
+     * @return string
+     */
     public function getClassNameForRelationships()
     {
         return class_basename($this);
     }
 
+    /**
+     * @return string
+     */
     public function getInheritanceColumn()
     {
         return property_exists($this, 'childColumn') ? $this->childColumn : 'type';
@@ -124,7 +192,7 @@ trait HasChildren
     public function getChildClass(array $attributes)
     {
 
-        if(!isset($attributes[$this->getInheritanceColumn()])){
+        if (!isset($attributes[$this->getInheritanceColumn()])) {
             return static::class;
         };
 
@@ -133,6 +201,10 @@ trait HasChildren
         );
     }
 
+    /**
+     * @param array $attributes
+     * @return mixed
+     */
     protected function getChildModel(array $attributes)
     {
         $className = $this->getChildClass($attributes);
@@ -140,6 +212,10 @@ trait HasChildren
         return new $className((array)$attributes);
     }
 
+    /**
+     * @param $aliasOrClass
+     * @return mixed
+     */
     public function classFromAlias($aliasOrClass)
     {
         if (property_exists($this, 'childTypes')) {
@@ -151,6 +227,10 @@ trait HasChildren
         return $aliasOrClass;
     }
 
+    /**
+     * @param $className
+     * @return false|int|string
+     */
     public function classToAlias($className)
     {
         if (property_exists($this, 'childTypes')) {
@@ -162,8 +242,12 @@ trait HasChildren
         return $className;
     }
 
+    /**
+     *
+     */
     public function getChildTypes()
     {
         return property_exists($this, 'childTypes') ? $this->childTypes : [];
     }
+
 }

@@ -16,11 +16,13 @@ class Company extends Model
     use HasChildren;
 
     protected $casts = [
-        'is_affiliate' => 'bool'
+        'is_affiliate' => 'bool',
+        'is_special' => 'bool',
     ];
 
-    protected $attributes = [
-        'is_affiliate' => false
+    protected static $requiredByParental = [
+        'is_affiliate',
+        'is_special'
     ];
 
     protected $guarded = [];
@@ -30,6 +32,11 @@ class Company extends Model
         if ($attributes['is_affiliate'] ?? null == true) {
             return AffiliateCompany::class;
         }
+
+        if ($attributes['is_special'] ?? null == true) {
+            return SpecialCompany::class;
+        }
+
         return self::class;
     }
 

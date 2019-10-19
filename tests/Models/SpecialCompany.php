@@ -4,14 +4,11 @@ namespace Parental\Tests\Models;
 
 use Parental\HasParent;
 
-class AffiliateCompany extends Company
+class SpecialCompany extends Company
 {
     use HasParent;
 
-    /**
-     * @return bool
-     */
-    public function SomethingThatOnlyAffiliateCanDo()
+    public function SomethingThatOnlySpecialCompanyCanDo()
     {
         return true;
     }
@@ -23,7 +20,7 @@ class AffiliateCompany extends Company
     protected function getParentalAttributes()
     {
         return [
-            'is_affiliate' => true
+            'is_special' => true
         ];
     }
 
