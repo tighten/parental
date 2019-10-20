@@ -20,11 +20,17 @@ trait HasChildren
     public static function bootHasChildren()
     {
 
-        static::addGlobalScope(function (Builder $query) {
+        static::addGlobalScope(function (Builder $builder) {
 
             if (property_exists(get_called_class(), 'requiredByParental')) {
 
-                $query->select(static::$requiredByParental);
+                if (!is_null($builder->getQuery()->columns)) {
+
+                    //columns specified
+                    $builder->addSelect(static::$requiredByParental);
+
+                }
+
 
             }
 

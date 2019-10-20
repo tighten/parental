@@ -132,6 +132,23 @@ class User extends Model
 }
 ```
 
+## Implicit Class Casting
+In case you don't want to use a static column for the type of the model, you can use a dynamic class casting based on parameters.
+
+```php
+class User extends Model
+{
+    use \Parental\HasChildren;
+
+    public function getChildClass(array $attributes)
+    {
+        
+    }
+
+}
+```
+
+
 ## Laravel Nova Support
 If you want to use share parent Nova resources with child models, you may register the following provider at the end of the boot method of your NovaServiceProvider:
 
