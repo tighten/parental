@@ -28,11 +28,18 @@ trait HasParent
         });
     }
 
+    /**
+     * @return bool
+     */
     public function parentHasHasChildrenTrait()
     {
         return $this->hasChildren ?? false;
     }
 
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
     public function getTable()
     {
         if (! isset($this->table)) {
@@ -42,11 +49,21 @@ trait HasParent
         return $this->table;
     }
 
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
     public function getForeignKey()
     {
         return Str::snake(class_basename($this->getParentClass())).'_'.$this->primaryKey;
     }
 
+    /**
+     * @param $related
+     * @param null $instance
+     * @return string
+     * @throws \ReflectionException
+     */
     public function joiningTable($related, $instance = null)
     {
         $relatedClassName = method_exists((new $related), 'getClassNameForRelationships')
@@ -63,11 +80,21 @@ trait HasParent
         return strtolower(implode('_', $models));
     }
 
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
     public function getClassNameForRelationships()
     {
         return class_basename($this->getParentClass());
     }
 
+    /**
+     * Get the class name for polymorphic relations.
+     *
+     * @return string
+     * @throws \ReflectionException
+     */
     public function getMorphClass()
     {
         if ($this->parentHasHasChildrenTrait()) {
@@ -78,6 +105,12 @@ trait HasParent
         return parent::getMorphClass();
     }
 
+    /**
+     * Get the class name for Parent Class.
+     *
+     * @return string
+     * @throws \ReflectionException
+     */
     protected function getParentClass()
     {
         static $parentClassName;
