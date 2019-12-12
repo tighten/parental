@@ -49,6 +49,11 @@ trait HasChildren
         return false;
     }
 
+    /**
+     * @param array $attributes
+     * @param bool $exists
+     * @return $this
+     */
     public function newInstance($attributes = [], $exists = false)
     {
         $model = isset($attributes[$this->getInheritanceColumn()])
@@ -64,6 +69,11 @@ trait HasChildren
         return $model;
     }
 
+    /**
+     * @param array $attributes
+     * @param null $connection
+     * @return $this
+     */
     public function newFromBuilder($attributes = [], $connection = null)
     {
         $model = $this->newInstance((array) $attributes, true);
@@ -77,6 +87,15 @@ trait HasChildren
         return $model;
     }
 
+    /**
+     * Define an inverse one-to-one or many relationship.
+     *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $ownerKey
+     * @param  string  $relation
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
     {
         $instance = $this->newRelatedInstance($related);
@@ -92,11 +111,31 @@ trait HasChildren
         return parent::belongsTo($related, $foreignKey, $ownerKey, $relation);
     }
 
+    /**
+     * Define a one-to-many relationship.
+     *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $localKey
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function hasMany($related, $foreignKey = null, $localKey = null)
     {
         return parent::hasMany($related, $foreignKey, $localKey);
     }
 
+    /**
+     * Define a many-to-many relationship.
+     *
+     * @param  string  $related
+     * @param  string  $table
+     * @param  string  $foreignPivotKey
+     * @param  string  $relatedPivotKey
+     * @param  string  $parentKey
+     * @param  string  $relatedKey
+     * @param  string  $relation
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null, $parentKey = null, $relatedKey = null, $relation = null)
     {
         $instance = $this->newRelatedInstance($related);
@@ -108,16 +147,26 @@ trait HasChildren
         return parent::belongsToMany($related, $table, $foreignPivotKey, $relatedPivotKey, $parentKey, $relatedKey, $relation);
     }
 
+    /**
+     * @return string
+     */
     public function getClassNameForRelationships()
     {
         return class_basename($this);
     }
 
+    /**
+     * @return string
+     */
     public function getInheritanceColumn()
     {
         return property_exists($this, 'childColumn') ? $this->childColumn : 'type';
     }
 
+    /**
+     * @param array $attributes
+     * @return mixed
+     */
     protected function getChildModel(array $attributes)
     {
         $className = $this->classFromAlias(
@@ -127,6 +176,10 @@ trait HasChildren
         return new $className((array)$attributes);
     }
 
+    /**
+     * @param $aliasOrClass
+     * @return string
+     */
     public function classFromAlias($aliasOrClass)
     {
         if (property_exists($this, 'childTypes')) {
@@ -138,6 +191,10 @@ trait HasChildren
         return $aliasOrClass;
     }
 
+    /**
+     * @param $className
+     * @return string
+     */
     public function classToAlias($className)
     {
         if (property_exists($this, 'childTypes')) {
@@ -149,6 +206,9 @@ trait HasChildren
         return $className;
     }
 
+    /**
+     * @return array
+     */
     public function getChildTypes()
     {
         return property_exists($this, 'childTypes') ? $this->childTypes : [];
