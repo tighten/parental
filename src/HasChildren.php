@@ -68,9 +68,14 @@ trait HasChildren
     {
         $attributes = (array) $attributes;
 
+        $inheritanceAttributes = [];
         $inheritanceColumn = $this->getInheritanceColumn();
 
-        $model = $this->newInstance([$inheritanceColumn => $attributes[$inheritanceColumn]], true);
+        if (isset($attributes[$inheritanceColumn])) {
+            $inheritanceAttributes[$inheritanceColumn] = $attributes[$inheritanceColumn];
+        }
+
+        $model = $this->newInstance($inheritanceAttributes, true);
 
         $model->setRawAttributes($attributes, true);
 
