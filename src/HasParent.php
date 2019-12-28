@@ -2,8 +2,9 @@
 
 namespace Parental;
 
-use Illuminate\Support\Str;
 use ReflectionClass;
+use Illuminate\Support\Str;
+use Illuminate\Events\Dispatcher;
 
 trait HasParent
 {
@@ -11,6 +12,11 @@ trait HasParent
 
     public static function bootHasParent()
     {
+        // This adds support for using Parental with standalone Eloquent, outside a normal Laravel app.
+        if (static::getEventDispatcher() === null) {
+            static::setEventDispatcher(new Dispatcher());
+        }
+
         static::creating(function ($model) {
             if ($model->parentHasHasChildrenTrait()) {
                 $model->forceFill(
