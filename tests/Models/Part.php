@@ -1,6 +1,6 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Models;
+namespace Parental\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tightenco\Parental;
+namespace Parental;
 
 use Illuminate\Support\Str;
 
@@ -19,7 +19,9 @@ trait HasChildren
             // from the child's boot method as well.
             if (! self::parentIsBooting()) {
                 foreach ((new self)->childTypes as $childClass) {
-                    $childClass::registerModelEvent($event, $callback);
+                    if ($childClass !== self::class) {
+                        $childClass::registerModelEvent($event, $callback);
+                    }
                 }
             }
         }
@@ -49,6 +51,11 @@ trait HasChildren
         return false;
     }
 
+    /**
+     * @param array $attributes
+     * @param bool $exists
+     * @return $this
+     */
     public function newInstance($attributes = [], $exists = false)
     {
         $model = isset($attributes[$this->getInheritanceColumn()])
@@ -64,11 +71,25 @@ trait HasChildren
         return $model;
     }
 
+    /**
+     * @param array $attributes
+     * @param null $connection
+     * @return $this
+     */
     public function newFromBuilder($attributes = [], $connection = null)
     {
-        $model = $this->newInstance((array) $attributes, true);
+        $attributes = (array) $attributes;
 
-        $model->setRawAttributes((array) $attributes, true);
+        $inheritanceAttributes = [];
+        $inheritanceColumn = $this->getInheritanceColumn();
+
+        if (isset($attributes[$inheritanceColumn])) {
+            $inheritanceAttributes[$inheritanceColumn] = $attributes[$inheritanceColumn];
+        }
+
+        $model = $this->newInstance($inheritanceAttributes, true);
+
+        $model->setRawAttributes($attributes, true);
 
         $model->setConnection($connection ?: $this->getConnectionName());
 
@@ -77,6 +98,15 @@ trait HasChildren
         return $model;
     }
 
+    /**
+     * Define an inverse one-to-one or many relationship.
+     *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $ownerKey
+     * @param  string  $relation
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
     {
         $instance = $this->newRelatedInstance($related);
@@ -92,11 +122,31 @@ trait HasChildren
         return parent::belongsTo($related, $foreignKey, $ownerKey, $relation);
     }
 
+    /**
+     * Define a one-to-many relationship.
+     *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $localKey
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function hasMany($related, $foreignKey = null, $localKey = null)
     {
         return parent::hasMany($related, $foreignKey, $localKey);
     }
 
+    /**
+     * Define a many-to-many relationship.
+     *
+     * @param  string  $related
+     * @param  string  $table
+     * @param  string  $foreignPivotKey
+     * @param  string  $relatedPivotKey
+     * @param  string  $parentKey
+     * @param  string  $relatedKey
+     * @param  string  $relation
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null, $parentKey = null, $relatedKey = null, $relation = null)
     {
         $instance = $this->newRelatedInstance($related);
@@ -108,16 +158,26 @@ trait HasChildren
         return parent::belongsToMany($related, $table, $foreignPivotKey, $relatedPivotKey, $parentKey, $relatedKey, $relation);
     }
 
+    /**
+     * @return string
+     */
     public function getClassNameForRelationships()
     {
         return class_basename($this);
     }
 
+    /**
+     * @return string
+     */
     public function getInheritanceColumn()
     {
         return property_exists($this, 'childColumn') ? $this->childColumn : 'type';
     }
 
+    /**
+     * @param array $attributes
+     * @return mixed
+     */
     protected function getChildModel(array $attributes)
     {
         $className = $this->classFromAlias(
@@ -127,6 +187,10 @@ trait HasChildren
         return new $className((array)$attributes);
     }
 
+    /**
+     * @param $aliasOrClass
+     * @return string
+     */
     public function classFromAlias($aliasOrClass)
     {
         if (property_exists($this, 'childTypes')) {
@@ -138,6 +202,10 @@ trait HasChildren
         return $aliasOrClass;
     }
 
+    /**
+     * @param $className
+     * @return string
+     */
     public function classToAlias($className)
     {
         if (property_exists($this, 'childTypes')) {
@@ -149,6 +217,9 @@ trait HasChildren
         return $className;
     }
 
+    /**
+     * @return array
+     */
     public function getChildTypes()
     {
         return property_exists($this, 'childTypes') ? $this->childTypes : [];

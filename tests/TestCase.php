@@ -1,6 +1,6 @@
 <?php
 
-namespace Tightenco\Parental\Tests;
+namespace Parental\Tests;
 
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as BaseTestCase;

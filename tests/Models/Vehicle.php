@@ -1,9 +1,9 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Models;
+namespace Parental\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Tightenco\Parental\HasChildren;
+use Parental\HasChildren;
 
 class Vehicle extends Model
 {
@@ -14,7 +14,8 @@ class Vehicle extends Model
     ];
 
     protected $childTypes = [
-        'car' => Car::class
+        'car' => Car::class,
+        'truck' => self::class,
     ];
 
     protected $guarded = [];

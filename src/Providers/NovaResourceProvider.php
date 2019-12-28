@@ -1,11 +1,11 @@
 <?php
 
-namespace Tightenco\Parental\Providers;
+namespace Parental\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Nova;
-use Tightenco\Parental\HasChildren;
-use Tightenco\Parental\HasParent;
+use Parental\HasChildren;
+use Parental\HasParent;
 
 class NovaResourceProvider extends ServiceProvider
 {

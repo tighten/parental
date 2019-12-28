@@ -1,13 +1,13 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Features;
+namespace Parental\Tests\Features;
 
-use Tightenco\Parental\Tests\Models\Car;
-use Tightenco\Parental\Tests\Models\Train;
-use Tightenco\Parental\Tests\Models\Vehicle;
-use Tightenco\Parental\Tests\Observers\CarObserver;
-use Tightenco\Parental\Tests\Observers\VehicleObserver;
-use Tightenco\Parental\Tests\TestCase;
+use Parental\Tests\Models\Car;
+use Parental\Tests\Models\Train;
+use Parental\Tests\Models\Vehicle;
+use Parental\Tests\Observers\CarObserver;
+use Parental\Tests\Observers\VehicleObserver;
+use Parental\Tests\TestCase;
 
 class ParentsObserveChildrenTest extends TestCase
 {

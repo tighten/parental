@@ -1,13 +1,13 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Features;
+namespace Parental\Tests\Features;
 
-use Tightenco\Parental\Tests\Models\Car;
-use Tightenco\Parental\Tests\Models\Driver;
-use Tightenco\Parental\Tests\Models\Passenger;
-use Tightenco\Parental\Tests\Models\Trip;
-use Tightenco\Parental\Tests\Models\Vehicle;
-use Tightenco\Parental\Tests\TestCase;
+use Parental\Tests\Models\Car;
+use Parental\Tests\Models\Driver;
+use Parental\Tests\Models\Passenger;
+use Parental\Tests\Models\Trip;
+use Parental\Tests\Models\Vehicle;
+use Parental\Tests\TestCase;
 
 class ChildModelsActLikeParentModelsTest extends TestCase
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Models;
+namespace Parental\Tests\Models;
 
-use Tightenco\Parental\HasParent;
+use Parental\HasParent;
 
 class Car extends Vehicle
 {
