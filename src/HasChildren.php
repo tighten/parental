@@ -76,9 +76,18 @@ trait HasChildren
      */
     public function newFromBuilder($attributes = [], $connection = null)
     {
-        $model = $this->newInstance((array) $attributes, true);
+        $attributes = (array) $attributes;
 
-        $model->setRawAttributes((array) $attributes, true);
+        $inheritanceAttributes = [];
+        $inheritanceColumn = $this->getInheritanceColumn();
+
+        if (isset($attributes[$inheritanceColumn])) {
+            $inheritanceAttributes[$inheritanceColumn] = $attributes[$inheritanceColumn];
+        }
+
+        $model = $this->newInstance($inheritanceAttributes, true);
+
+        $model->setRawAttributes($attributes, true);
 
         $model->setConnection($connection ?: $this->getConnectionName());
 
