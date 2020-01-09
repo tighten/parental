@@ -20,6 +20,7 @@ trait HasChildren
             // We don't want to register the callbacks that happen in the boot method of the parent, as they'll be called
             // from the child's boot method as well.
             if (! self::parentIsBooting()) {
+                foreach ($childTypes as $childClass) {
                     if ($childClass !== self::class) {
                         $childClass::registerModelEvent($event, $callback);
                     }
@@ -133,8 +134,8 @@ trait HasChildren
     public function classFromAlias($aliasOrClass)
     {
         if (property_exists($this, 'childTypes')) {
-            if (isset($this->childTypes[$aliasOrClass])) {
-                return $this->childTypes[$aliasOrClass];
+            if (isset($this->getChildTypes()[$aliasOrClass])) {
+                return $this->getChildTypes()[$aliasOrClass];
             }
         }
 
@@ -144,8 +145,8 @@ trait HasChildren
     public function classToAlias($className)
     {
         if (property_exists($this, 'childTypes')) {
-            if (in_array($className, $this->childTypes)) {
-                return array_search($className, $this->childTypes);
+            if (in_array($className, $this->getChildTypes())) {
+                return array_search($className, $this->getChildTypes());
             }
         }
 
