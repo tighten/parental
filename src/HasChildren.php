@@ -88,16 +88,21 @@ trait HasChildren
         }
 
         $model = $this->newInstance($inheritanceAttributes, true);
-
         $model->setRawAttributes($attributes, true);
 
-        $model->setConnection($connection ?: $this->getConnectionName());
+        if(get_class($model) != $model->$inheritanceColumn) {
+            $inheritanceAttributes = [];
+            $inheritanceAttributes[$inheritanceColumn] = $model->$inheritanceColumn;
+            
+            $model = $this->newInstance($inheritanceAttributes);
+            $model->setRawAttributes($attributes, true);
+        }
 
+        $model->setConnection($connection ?: $this->getConnectionName());
         $model->fireModelEvent('retrieved', false);
 
         return $model;
     }
-
     /**
      * Define an inverse one-to-one or many relationship.
      *
