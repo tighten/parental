@@ -123,4 +123,16 @@ trait HasParent
 
         return $parentClassName ?: $parentClassName = (new ReflectionClass($this))->getParentClass()->getName();
     }
+
+    /**
+     * Get the fillable attributes for the model.
+     *
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getFillable()
+    {
+        $parentFillable = (new ReflectionClass($this))->getParentClass()->newInstance()->getFillable();
+        return array_merge($this->fillable, $parentFillable);
+    }
 }
