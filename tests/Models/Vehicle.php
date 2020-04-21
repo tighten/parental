@@ -14,7 +14,8 @@ class Vehicle extends Model
     ];
 
     protected $childTypes = [
-        'car' => Car::class
+        'car' => Car::class,
+        'truck' => self::class,
     ];
 
     protected $guarded = [];
