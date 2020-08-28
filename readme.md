@@ -11,7 +11,7 @@ It's a fancy name for a simple concept: Extending a model (usually to add specif
 ## Installation
 
 ```bash
-composer require "calebporzio/parental=0.9"
+composer require calebporzio/parental
 ```
 
 ## Simple Usage
@@ -20,6 +20,8 @@ composer require "calebporzio/parental=0.9"
 // The "parent"
 class User extends Model
 {
+    use \Parental\HasChildren;
+
     //
 }
 ```
