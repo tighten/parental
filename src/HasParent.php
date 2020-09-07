@@ -26,7 +26,7 @@ trait HasParent
         });
 
         static::addGlobalScope(function ($query) {
-            $instance = new static;
+            $instance = $query->getModel();
 
             if ($instance->parentHasHasChildrenTrait()) {
                 $query->where($instance->getTable().'.'.$instance->getInheritanceColumn(), $instance->classToAlias(get_class($instance)));

@@ -4,6 +4,7 @@ namespace Parental\Tests\Unit;
 
 use Illuminate\Database\Eloquent\Model;
 use Parental\HasParent;
+use Parental\HasChildren;
 use Parental\Tests\TestCase;
 
 class HasParentTest extends TestCase
@@ -33,14 +34,38 @@ class HasParentTest extends TestCase
         $this->assertEquals('parent_model_related_model', (new ChildModel)->joiningTable($related));
         $this->assertEquals('child_model_without_trait_related_model', (new ChildModelWithoutTrait)->joiningTable($related));
     }
+
+    public function test_alias_table_name_of_parent_model()
+    {
+        $sql = ChildModel::has('parent')->toSql();
+
+        $this->assertNotEquals(
+            $sql,
+            'select * from "parent_models" where exists (select * from "parent_models" as "laravel_reserved_0" where "laravel_reserved_0"."id" = "parent_models"."parent_model_id" and "parent_models"."type" = ?) and "parent_models"."type" = ?'
+        );
+
+        $this->assertEquals(
+            $sql,
+            'select * from "parent_models" where exists (select * from "parent_models" as "laravel_reserved_0" where "laravel_reserved_0"."id" = "parent_models"."parent_model_id" and "laravel_reserved_0"."type" = ?) and "parent_models"."type" = ?'
+        );
+    }
 }
 
 class ParentModel extends Model {
-   //
+    use HasChildren;
+
+    protected $childTypes = [
+        'child' => ChildModel::class,
+    ];
 }
 
 class ChildModel extends ParentModel {
     use HasParent;
+
+    public function parent()
+    {
+        return $this->belongsTo(ChildModel::class);
+    }
 }
 
 class ChildModelWithoutTrait extends ParentModel {
