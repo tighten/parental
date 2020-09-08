@@ -48,7 +48,7 @@ class TypeColumnGetsSetAutomaticallyTest extends TestCase
     /** @test */
     function type_column_gets_set_on_creation_from_a_model_factory()
     {
-        $car = factory(Car::class)->create();
+        $car = Car::factory()->create();
 
         $this->assertNotNull($car->type);
     }
