@@ -1,9 +1,17 @@
 <?php
 
-use Parental\Tests\Models\Car;
+namespace Database\Factories;
 
-$factory->define(Car::class, function () {
-    return [
-        //
-    ];
-});
+use Parental\Tests\Models\Car;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class CarFactory extends Factory
+{
+    protected $model = Car::class;
+
+
+    public function definition()
+    {
+        return [];
+    }
+}
