@@ -148,6 +148,29 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 }
 ```
 
+## Livewire Support
+Using Parental mixed-model collections in Livewire components will cause Laravel to throw the exception `Queueing collections with multiple model types is not supported`.
+
+To support the hydration/dehydration of these collections, use property helper functions to capture the list of collection ids during dehydration, and restore them
+during hydration using the parent model:
+
+```php
+class FooList extends Livewire\Component
+{
+    public $foo;
+    
+    public function dehydrateFoo($value)
+    {
+        $this->foo = $value->modelKeys();
+    }
+    
+    public function hydrateFoo($value)
+    {
+        $this->foo = \App\Models\Foo::find($value);
+    }   
+}
+```
+
 ---
 
 Thanks to [@sschoger](https://twitter.com/steveschoger) for the sick logo design, and [@DanielCoulbourne](https://twitter.com/DCoulbourne) for helping brainstorm the idea on [Twenty Percent Time](http://twentypercent.fm/).
