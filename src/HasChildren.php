@@ -184,7 +184,7 @@ trait HasChildren
             $attributes[$this->getInheritanceColumn()]->value ?? $attributes[$this->getInheritanceColumn()]
         );
 
-        return $className === self::class ? new static(((array) $attributes)) : new $className((array)$attributes);
+        return new $className((array)$attributes);
     }
 
     /**
