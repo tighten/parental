@@ -58,7 +58,7 @@ trait HasChildren
      */
     public function newInstance($attributes = [], $exists = false)
     {
-        $model = isset($attributes[$this->getInheritanceColumn()])
+        $model = isset($attributes[$this->getInheritanceColumn()]) && 
             ? $this->getChildModel($attributes)
             : new static(((array) $attributes));
 
@@ -181,10 +181,10 @@ trait HasChildren
     protected function getChildModel(array $attributes)
     {
         $className = $this->classFromAlias(
-            $attributes[$this->getInheritanceColumn()]
+            $attributes[$this->getInheritanceColumn()]->value ?? $attributes[$this->getInheritanceColumn()]
         );
 
-        return new $className((array)$attributes);
+        return $className === self::class ? new static(((array) $attributes)) : new $className((array)$attributes);
     }
 
     /**
