@@ -58,7 +58,7 @@ trait HasChildren
      */
     public function newInstance($attributes = [], $exists = false)
     {
-        $model = isset($attributes[$this->getInheritanceColumn()]) && 
+        $model = isset($attributes[$this->getInheritanceColumn()])
             ? $this->getChildModel($attributes)
             : new static(((array) $attributes));
 
