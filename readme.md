@@ -147,6 +147,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     }
 }
 ```
+Also, to quickly add children type fields in Nova, you can use [Nova Parental Field](https://github.com/wamadev/nova-parental-field)
 
 ---
 
