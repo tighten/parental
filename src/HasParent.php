@@ -25,7 +25,7 @@ trait HasParent
             }
         });
 
-        static::addGlobalScope(function ($query) {
+        static::addGlobalScope('singleTableInheritanceFilter', function ($query) {
             $instance = new static;
 
             if ($instance->parentHasHasChildrenTrait()) {
