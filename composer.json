@@ -4,8 +4,16 @@
     "license": "MIT",
     "authors": [
         {
+            "role": "author",
             "name": "Caleb Porzio",
-            "email": "calebporzio@gmail.com"
+            "email": "calebporzio@gmail.com",
+            "homepage": "https://calebporzio.com/"
+        },
+        {
+            "role": "developer",
+            "name": "Steve McDougall",
+            "email": "juststevemcd@gmail.com",
+            "homepage": "https://www.juststeveking.uk/"
         }
     ],
     "require": {
