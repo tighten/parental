@@ -216,7 +216,7 @@ trait HasChildren
      * @param array $attributes
      * @return mixed
      */
-    protected function getChildModel(array $attributes): mixed
+    protected function getChildModel(array $attributes)
     {
         $className = $this->classFromAlias(
             $attributes[$this->getInheritanceColumn()]
@@ -229,7 +229,7 @@ trait HasChildren
      * @param mixed $aliasOrClass
      * @return string
      */
-    public function classFromAlias(mixed $aliasOrClass): string
+    public function classFromAlias($aliasOrClass): string
     {
         if (property_exists($this, 'childTypes')) {
             if (isset($this->childTypes[$aliasOrClass])) {
