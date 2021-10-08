@@ -2,15 +2,32 @@
 
 namespace Parental;
 
+use Closure;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 trait HasChildren
 {
+    /**
+     * @var bool
+     */
     protected static $parentBootMethods;
 
+    /**
+     * @var bool
+     */
     protected $hasChildren = true;
 
-    protected static function registerModelEvent($event, $callback)
+    /**
+     * Register a model event with the dispatcher.
+     *
+     * @param  string  $event
+     * @param Closure|string  $callback
+     * @return void
+     */
+    protected static function registerModelEvent($event, $callback): void
     {
         parent::registerModelEvent($event, $callback);
 
@@ -27,7 +44,10 @@ trait HasChildren
         }
     }
 
-    protected static function parentIsBooting()
+    /**
+     * @return bool
+     */
+    protected static function parentIsBooting(): bool
     {
         if (! isset(self::$parentBootMethods)) {
             self::$parentBootMethods[] = 'boot';
@@ -52,11 +72,13 @@ trait HasChildren
     }
 
     /**
-     * @param array $attributes
-     * @param bool $exists
-     * @return $this
+     * Create a new instance of the given model.
+     *
+     * @param  array  $attributes
+     * @param  bool  $exists
+     * @return static
      */
-    public function newInstance($attributes = [], $exists = false)
+    public function newInstance($attributes = [], $exists = false): self
     {
         $model = isset($attributes[$this->getInheritanceColumn()])
             ? $this->getChildModel($attributes)
@@ -72,11 +94,13 @@ trait HasChildren
     }
 
     /**
-     * @param array $attributes
-     * @param null $connection
-     * @return $this
+     * Create a new model instance that is existing.
+     *
+     * @param  array  $attributes
+     * @param  string|null  $connection
+     * @return static
      */
-    public function newFromBuilder($attributes = [], $connection = null)
+    public function newFromBuilder($attributes = [], $connection = null): self
     {
         $attributes = (array) $attributes;
 
@@ -102,12 +126,12 @@ trait HasChildren
      * Define an inverse one-to-one or many relationship.
      *
      * @param  string  $related
-     * @param  string  $foreignKey
-     * @param  string  $ownerKey
-     * @param  string  $relation
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @param  string|null  $foreignKey
+     * @param  string|null  $ownerKey
+     * @param  string|null  $relation
+     * @return BelongsTo
      */
-    public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
+    public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null): BelongsTo
     {
         $instance = $this->newRelatedInstance($related);
 
@@ -126,11 +150,11 @@ trait HasChildren
      * Define a one-to-many relationship.
      *
      * @param  string  $related
-     * @param  string  $foreignKey
-     * @param  string  $localKey
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @param  string|null  $foreignKey
+     * @param  string|null  $localKey
+     * @return HasMany
      */
-    public function hasMany($related, $foreignKey = null, $localKey = null)
+    public function hasMany($related, $foreignKey = null, $localKey = null): HasMany
     {
         return parent::hasMany($related, $foreignKey, $localKey);
     }
@@ -139,29 +163,43 @@ trait HasChildren
      * Define a many-to-many relationship.
      *
      * @param  string  $related
-     * @param  string  $table
-     * @param  string  $foreignPivotKey
-     * @param  string  $relatedPivotKey
-     * @param  string  $parentKey
-     * @param  string  $relatedKey
-     * @param  string  $relation
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @param  string|null  $table
+     * @param  string|null  $foreignPivotKey
+     * @param  string|null  $relatedPivotKey
+     * @param  string|null  $parentKey
+     * @param  string|null  $relatedKey
+     * @param  string|null  $relation
+     * @return BelongsToMany
      */
-    public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null, $parentKey = null, $relatedKey = null, $relation = null)
-    {
+    public function belongsToMany(
+        $related, $table = null,
+        $foreignPivotKey = null,
+        $relatedPivotKey = null,
+        $parentKey = null,
+        $relatedKey = null,
+        $relation = null
+    ): BelongsToMany {
         $instance = $this->newRelatedInstance($related);
 
         if (is_null($table) && $instance->hasParent) {
             $table = $this->joiningTable($instance->getClassNameForRelationships());
         }
 
-        return parent::belongsToMany($related, $table, $foreignPivotKey, $relatedPivotKey, $parentKey, $relatedKey, $relation);
+        return parent::belongsToMany(
+            $related,
+            $table,
+            $foreignPivotKey,
+            $relatedPivotKey,
+            $parentKey,
+            $relatedKey,
+            $relation,
+        );
     }
 
     /**
      * @return string
      */
-    public function getClassNameForRelationships()
+    public function getClassNameForRelationships(): string
     {
         return class_basename($this);
     }
@@ -169,7 +207,7 @@ trait HasChildren
     /**
      * @return string
      */
-    public function getInheritanceColumn()
+    public function getInheritanceColumn(): string
     {
         return property_exists($this, 'childColumn') ? $this->childColumn : 'type';
     }
@@ -178,20 +216,20 @@ trait HasChildren
      * @param array $attributes
      * @return mixed
      */
-    protected function getChildModel(array $attributes)
+    protected function getChildModel(array $attributes): mixed
     {
         $className = $this->classFromAlias(
             $attributes[$this->getInheritanceColumn()]
         );
 
-        return new $className((array)$attributes);
+        return new $className((array) $attributes);
     }
 
     /**
-     * @param $aliasOrClass
+     * @param mixed $aliasOrClass
      * @return string
      */
-    public function classFromAlias($aliasOrClass)
+    public function classFromAlias(mixed $aliasOrClass): string
     {
         if (property_exists($this, 'childTypes')) {
             if (isset($this->childTypes[$aliasOrClass])) {
@@ -203,10 +241,10 @@ trait HasChildren
     }
 
     /**
-     * @param $className
+     * @param string $className
      * @return string
      */
-    public function classToAlias($className)
+    public function classToAlias(string $className): string
     {
         if (property_exists($this, 'childTypes')) {
             if (in_array($className, $this->childTypes)) {
@@ -220,7 +258,7 @@ trait HasChildren
     /**
      * @return array
      */
-    public function getChildTypes()
+    public function getChildTypes(): array
     {
         return property_exists($this, 'childTypes') ? $this->childTypes : [];
     }
