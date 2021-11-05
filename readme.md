@@ -17,28 +17,38 @@ composer require calebporzio/parental
 ## Simple Usage
 
 ```php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Parental\HasChildren;
+
 // The "parent"
 class User extends Model
 {
-    use \Parental\HasChildren;
-
+    use HasChildren;
     //
 }
 ```
 
 ```php
+namespace App\Models;
+
+use Parental\HasParent;
+
 // The "child"
 class Admin extends User
 {
-    use \Parental\HasParent;
+    use HasParent;
 
     public function impersonate($user) {
-        ...
+        //...
     }
 }
 ```
 
 ```php
+use App\Models\Admin;
+
 // Returns "Admin" model, but reference "users" table:
 $admin = Admin::first();
 
@@ -59,33 +69,50 @@ Schema::table('users', function ($table) {
 ```
 
 ```php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Parental\HasChildren;
+
 // The "parent"
 class User extends Model
 {
-    use \Parental\HasChildren;
+    use HasChildren;
 
     protected $fillable = ['type'];
 }
 ```
 
 ```php
+namespace App\Models;
+
+use Parental\HasParent;
+
 // A "child"
 class Admin extends User
 {
-    use \Parental\HasParent;
+    use HasParent;
 }
 ```
 
 ```php
+namespace App\Models;
+
+use Parental\HasParent;
+
 // Another "child"
 class Guest extends User
 {
-    use \Parental\HasParent;
+    use HasParent;
 }
 ```
 
 
 ```php
+use App\Models\Admin;
+use App\Models\Guest;
+use App\Models\User;
+
 // Adds row to "users" table with "type" column set to: "App/Admin"
 Admin::create(...);
 
@@ -103,15 +130,20 @@ Before, if we ran: `User::first()` we would only get back `User` models. By addi
 If you don't want to store raw class names in the type column, you can override them using the `$childTypes` property.
 
 ```php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Parental\HasChildren;
+
 class User extends Model
 {
-    use \Parental\HasChildren;
+    use HasChildren;
 
     protected $fillable = ['type'];
 
     protected $childTypes = [
-        'admin' => App\Admin::class,
-        'guest' => App\Guest::class,
+        'admin' => Admin::class,
+        'guest' => Guest::class,
     ];
 }
 ```
@@ -124,9 +156,14 @@ This feature is useful if you are working with an existing type column, or if yo
 You can override the default type column by setting the `$childColumn` property on the parent model.
 
 ```php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Parental\HasChildren;
+
 class User extends Model
 {
-    use \Parental\HasChildren;
+    use HasChildren;
 
     protected $fillable = ['parental_type'];
 
