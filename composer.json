@@ -27,5 +27,7 @@
             "Parental\\Tests\\": "tests/",
             "Database\\Factories\\": "tests/factories/"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
