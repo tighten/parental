@@ -9,13 +9,13 @@
         }
     ],
     "require": {
-        "php": "^7.4|^8.0",
-        "illuminate/database": "^8.0",
-        "illuminate/events": "^8.0"
+        "php": "^8.0",
+        "illuminate/database": "^9.0",
+        "illuminate/events": "^9.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.0",
-        "phpunit/phpunit": "^8.5"
+        "orchestra/testbench": "^7.0",
+        "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
         "psr-4": {
