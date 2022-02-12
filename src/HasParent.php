@@ -103,12 +103,9 @@ trait HasParent
      */
     public function getMorphClass()
     {
-        if ($this->parentHasHasChildrenTrait()) {
-            $parentClass = $this->getParentClass();
-            return (new $parentClass)->getMorphClass();
-        }
+        $parentClass = $this->getParentClass();
 
-        return parent::getMorphClass();
+        return (new $parentClass)->getMorphClass();
     }
 
     /**
