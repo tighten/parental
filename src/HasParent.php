@@ -116,6 +116,19 @@ trait HasParent
 
         return (new $parentClass)->getMorphClass();
     }
+    
+    /**
+     * Get the class name for polymorphic relations.
+     *
+     * @return string
+     * @throws ReflectionException
+     */
+    public function getClassNameForSerialization(): string
+    {
+        $parentClass = $this->getParentClass();
+
+        return (new $parentClass)->getMorphClass();
+    }
 
     /**
      * Get the class name for Parent Class.
