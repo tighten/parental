@@ -127,6 +127,11 @@ trait HasParent
     {
         static $parentClassName;
 
-        return $parentClassName ?: $parentClassName = (new ReflectionClass($this))->getParentClass()->getName();
+        if ($parentClassName) return $parentClassName;
+
+        $parentClassName = (new ReflectionClass($this))->getParentClass()->getName();
+
+        $parent = new $parentClassName;
+        return $parent->hasParent === true ? $parent->getParentClass() : $parentClassName;
     }
 }
