@@ -81,13 +81,13 @@ trait HasParent
      */
     public function joiningTable($related, $instance = null): string
     {
-        $relatedClassName = method_exists((new $related), 'getClassNameForRelationships')
-            ? (new $related)->getClassNameForRelationships()
+        $relatedClassName = method_exists((new $related), 'getClassNameForHasParentRelationships')
+            ? (new $related)->getClassNameForHasParentRelationships()
             : class_basename($related);
 
         $models = [
             Str::snake($relatedClassName),
-            Str::snake($this->getClassNameForRelationships()),
+            Str::snake($this->getClassNameForHasParentRelationships()),
         ];
 
         sort($models);
@@ -99,7 +99,7 @@ trait HasParent
      * @return string
      * @throws ReflectionException
      */
-    public function getClassNameForRelationships(): string
+    public function getClassNameForHasParentRelationships(): string
     {
         return class_basename($this->getParentClass());
     }
