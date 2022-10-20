@@ -18,7 +18,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "illuminate/framework": "^v9.32.0"
+        "illuminate/framework": "^v9.32.0",
         "illuminate/database": "^9.0",
         "illuminate/events": "^9.0"
     },
