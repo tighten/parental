@@ -5,6 +5,8 @@ namespace Parental\Tests;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use Parental\Tests\Models\LeCredential;
+use Parental\Tests\Models\OorCredential;
 
 class TestCase extends BaseTestCase
 {
@@ -80,6 +82,20 @@ class TestCase extends BaseTestCase
             $table->increments('id');
             $table->integer('part_id');
             $table->morphs('partable');
+            $table->timestamps();
+        });
+
+        Schema::create('nodes', function ($table) {
+            $table->increments('id');
+            $table->string('type');
+            $table->string('name');
+            $table->timestamps();
+        });
+
+        Schema::create('node_edges', function ($table) {
+            $table->increments('id');
+            $table->string('parent_node_id');
+            $table->string('child_node_id');
             $table->timestamps();
         });
     }
