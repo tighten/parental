@@ -11,7 +11,7 @@ It's a fancy name for a simple concept: Extending a model (usually to add specif
 ## Installation
 
 ```bash
-composer require calebporzio/parental
+composer require tightenco/parental
 ```
 
 ## Simple Usage
