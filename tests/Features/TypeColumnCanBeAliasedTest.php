@@ -15,7 +15,7 @@ class TypeColumnCanBeAliasedTest extends TestCase
         Car::create(['type' => 'car']);
         Plane::create(['type' => Plane::class]);
 
-        $vehicles = Vehicle::all();
+        $vehicles = Car::all()->merge(Plane::all());
 
         $this->assertInstanceOf(Car::class, $vehicles[0]);
         $this->assertInstanceOf(Plane::class, $vehicles[1]);
