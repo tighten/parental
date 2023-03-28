@@ -98,5 +98,11 @@ class TestCase extends BaseTestCase
             $table->string('child_node_id');
             $table->timestamps();
         });
+
+        Schema::create('abstract_parents', function ($table) {
+            $table->increments('id');
+            $table->string('type')->nullable();
+            $table->timestamps();
+        });
     }
 }

@@ -5,7 +5,7 @@ namespace Parental\Tests\Models;
 use Illuminate\Database\Eloquent\Model;
 use Parental\HasChildren;
 
-abstract class Vehicle extends Model
+class Vehicle extends Model
 {
     use HasChildren;
 
