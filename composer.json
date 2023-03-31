@@ -1,5 +1,5 @@
 {
-    "name": "calebporzio/parental",
+    "name": "tightenco/parental",
     "description": "A simple eloquent trait that allows relationships to be accessed through child models.",
     "license": "MIT",
     "authors": [
