@@ -31,7 +31,7 @@ trait HasChildren
     {
         parent::registerModelEvent($event, $callback);
 
-        $childTypes = (new self)->getChildTypes();
+        $childTypes = (new static)->getChildTypes();
 
         if (static::class === self::class && $childTypes !== []) {
             // We don't want to register the callbacks that happen in the boot method of the parent, as they'll be called
