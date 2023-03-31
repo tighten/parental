@@ -116,6 +116,17 @@ trait HasParent
 
         return (new $parentClass)->getMorphClass();
     }
+    
+    /**
+     * Get the class name for poly-type collections
+     *
+     * @return string
+     * @throws ReflectionException
+     */
+    public function getClassNameForSerialization(): string
+    {
+        return $this->getParentClass();
+    }
 
     /**
      * Get the class name for Parent Class.
