@@ -235,6 +235,11 @@ trait HasChildren
     {
         $childTypes = $this->getChildTypes();
 
+        // Handling Enum casting for `type` column
+        if ($aliasOrClass instanceof \UnitEnum) {
+            $aliasOrClass = $aliasOrClass->value;
+        }
+
         if (isset($childTypes[$aliasOrClass])) {
             return $childTypes[$aliasOrClass];
         }
