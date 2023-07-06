@@ -2,6 +2,7 @@
 
 namespace Parental\Tests\Features;
 
+use DomainException;
 use Parental\Tests\Models\Car;
 use Parental\Tests\Models\Driver;
 use Parental\Tests\Models\Passenger;
@@ -48,6 +49,16 @@ class ParentsAreAwareOfChildrenTest extends TestCase
         $this->assertInstanceOf(Car::class, $vehicles[0]);
         $this->assertInstanceOf(Plane::class, $vehicles[1]);
         $this->assertInstanceOf(Vehicle::class, $vehicles[2]);
+    }
+
+    /** @test */
+    function vehicle_query_builder_throw_domain_exception_with_invalid_type()
+    {
+        $this->expectException(DomainException::class);
+
+        Vehicle::create(['type' => 42]);
+
+        $vehicles = Vehicle::query()->get();
     }
 
     /** @test */
