@@ -3,6 +3,7 @@
 namespace Parental;
 
 use Closure;
+use DomainException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -223,6 +224,10 @@ trait HasChildren
         $className = $this->classFromAlias(
             $attributes[$this->getInheritanceColumn()]
         );
+
+        if(!class_exists($className)) {
+            throw new DomainException("Class {$className} not found");
+        }
 
         return new $className((array) $attributes);
     }
