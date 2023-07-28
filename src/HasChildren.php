@@ -267,6 +267,14 @@ trait HasChildren
      */
     public function getChildTypes(): array
     {
-        return property_exists($this, 'childTypes') ? $this->childTypes : [];
+        if (method_exists($this, 'childTypes')) {
+            return $this->childTypes();
+        }
+
+        if (property_exists($this, 'childTypes')) {
+            return $this->childTypes;
+        }
+
+        return [];
     }
 }
