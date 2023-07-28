@@ -2,9 +2,14 @@
 
 namespace Parental\Tests\Features;
 
+use Parental\Tests\Enums\ToolNames;
 use Parental\Tests\Models\Car;
 use Parental\Tests\Models\ChildFromAbstractParent;
+use Parental\Tests\Models\ClawHammer;
+use Parental\Tests\Models\Mallet;
 use Parental\Tests\Models\Plane;
+use Parental\Tests\Models\SledgeHammer;
+use Parental\Tests\Models\Tool;
 use Parental\Tests\Models\Vehicle;
 use Parental\Tests\TestCase;
 
@@ -38,5 +43,26 @@ class TypeColumnCanBeAliasedTest extends TestCase
         $child = ChildFromAbstractParent::all();
 
         $this->assertInstanceOf(ChildFromAbstractParent::class, $child[0]);
+    }
+
+    /** @test */
+    function enums_can_be_used_as_type_alias()
+    {
+        if (phpversion() < 8.1) {
+            $this->markTestSkipped('Enums are not supported in this version of PHP');
+        }
+
+        ClawHammer::create();
+        Mallet::create();
+        SledgeHammer::create();
+
+        $tools = Tool::all();
+
+        $this->assertInstanceOf(ClawHammer::class, $tools[0]);
+        $this->assertEquals(ToolNames::ClawHammer->value, $tools[0]->type);
+        $this->assertInstanceOf(Mallet::class, $tools[1]);
+        $this->assertEquals(ToolNames::Mallet->value, $tools[1]->type);
+        $this->assertInstanceOf(SledgeHammer::class, $tools[2]);
+        $this->assertEquals(ToolNames::SledgeHammer->value, $tools[2]->type);
     }
 }
