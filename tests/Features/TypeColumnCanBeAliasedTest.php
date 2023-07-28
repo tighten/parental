@@ -48,6 +48,10 @@ class TypeColumnCanBeAliasedTest extends TestCase
     /** @test */
     function enums_can_be_used_as_type_alias()
     {
+        if (phpversion() < 8.1) {
+            $this->markTestSkipped('Enums are not supported in this version of PHP');
+        }
+
         ClawHammer::create();
         Mallet::create();
         SledgeHammer::create();
