@@ -10,7 +10,7 @@ class Vehicle extends Model
     use HasChildren;
 
     protected $fillable = [
-        'type', 'driver_id'
+        'type', 'driver_id',
     ];
 
     protected $childTypes = [

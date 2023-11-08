@@ -5,8 +5,6 @@ namespace Parental\Tests;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use Parental\Tests\Models\LeCredential;
-use Parental\Tests\Models\OorCredential;
 
 class TestCase extends BaseTestCase
 {
@@ -17,19 +15,8 @@ class TestCase extends BaseTestCase
         $this->runMigrations();
 
         Factory::guessFactoryNamesUsing(static function (string $modelName) {
-            return sprintf("Database\\Factories\\%sFactory", class_basename($modelName));
+            return sprintf('Database\\Factories\\%sFactory', class_basename($modelName));
         });
-    }
-
-    protected function getEnvironmentSetUp($app)
-    {
-        // Setup default database to use sqlite :memory:
-        $app['config']->set('database.default', 'testbench');
-        $app['config']->set('database.connections.testbench', [
-            'driver'   => 'sqlite',
-            'database' => ':memory:',
-            'prefix'   => '',
-        ]);
     }
 
     public function runMigrations()
@@ -110,5 +97,16 @@ class TestCase extends BaseTestCase
             $table->string('type')->nullable();
             $table->timestamps();
         });
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        // Setup default database to use sqlite :memory:
+        $app['config']->set('database.default', 'testbench');
+        $app['config']->set('database.connections.testbench', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
     }
 }

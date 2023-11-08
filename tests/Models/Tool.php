@@ -18,6 +18,6 @@ class Tool extends Model
             ToolNames::ClawHammer->value => ClawHammer::class,
             ToolNames::Mallet->value => Mallet::class,
             ToolNames::SledgeHammer->value => SledgeHammer::class,
-          ];
+        ];
     }
 }

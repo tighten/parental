@@ -9,7 +9,7 @@ use Parental\Tests\TestCase;
 class HasParentTest extends TestCase
 {
     /** @test */
-    function child_model_has_table_name_of_parent_model()
+    public function child_model_has_table_name_of_parent_model()
     {
         $this->assertEquals('parent_models', (new ParentModel)->getTable());
         $this->assertEquals('parent_models', (new ChildModel)->getTable());
@@ -17,7 +17,7 @@ class HasParentTest extends TestCase
     }
 
     /** @test */
-    function child_model_has_same_foreign_key_as_parent()
+    public function child_model_has_same_foreign_key_as_parent()
     {
         $this->assertEquals('parent_model_id', (new ParentModel)->getForeignKey());
         $this->assertEquals('parent_model_id', (new ChildModel)->getForeignKey());
@@ -25,7 +25,7 @@ class HasParentTest extends TestCase
     }
 
     /** @test */
-    function child_model_has_same_pivot_table_name_as_parent()
+    public function child_model_has_same_pivot_table_name_as_parent()
     {
         $related = new RelatedModel;
 
@@ -35,18 +35,22 @@ class HasParentTest extends TestCase
     }
 }
 
-class ParentModel extends Model {
-   //
-}
-
-class ChildModel extends ParentModel {
-    use HasParent;
-}
-
-class ChildModelWithoutTrait extends ParentModel {
+class ParentModel extends Model
+{
     //
 }
 
-class RelatedModel extends Model {
+class ChildModel extends ParentModel
+{
+    use HasParent;
+}
+
+class ChildModelWithoutTrait extends ParentModel
+{
+    //
+}
+
+class RelatedModel extends Model
+{
     //
 }
