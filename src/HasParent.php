@@ -149,19 +149,12 @@ trait HasParent
      */
     public function getFillable()
     {
-        // @todo currently failing when parent class is abstract
-        // $parentFillable = (new \ReflectionClass((new \ReflectionClass($this))->getParentClass()));
-        // if ($parentFillable->isAbstract()) {
-        //     return ['*'];
-        // }
 
-        try {
-            $parentClass = $this->getParentClass();
-            $parentFillable = (new $parentClass)->getFillable();
-            $arr = array_unique(array_merge($parentFillable, $this->fillable));
-            return $arr;
-        } catch (\Throwable $th) {
+        $parentClass = $this->getParentClass();
+        if ((new ReflectionClass($parentClass))->isAbstract()) {
             return $this->fillable;
         }
+        $parentFillable = (new $parentClass)->getFillable();
+        return array_unique(array_merge($parentFillable, $this->fillable));
     }
 }

@@ -110,5 +110,14 @@ class TestCase extends BaseTestCase
             $table->string('type')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('events', function ($table) {
+            $table->increments('id');
+            $table->string('type')->nullable();
+            $table->string('name');
+            $table->string('industry')->nullable();
+            $table->string('skill_level')->nullable();
+            $table->timestamps();
+        });
     }
 }
