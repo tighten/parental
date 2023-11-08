@@ -3,9 +3,9 @@
 namespace Parental;
 
 use Illuminate\Database\Eloquent\Model;
-use ReflectionClass;
-use Illuminate\Support\Str;
 use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Str;
+use ReflectionClass;
 use ReflectionException;
 
 trait HasParent
@@ -16,14 +16,13 @@ trait HasParent
     public $hasParent = true;
 
     /**
-     * @return void
      * @throws ReflectionException
      */
     public static function bootHasParent(): void
     {
         // This adds support for using Parental with standalone Eloquent, outside a normal Laravel app.
         if (static::getEventDispatcher() === null) {
-            static::setEventDispatcher(new Dispatcher());
+            static::setEventDispatcher(new Dispatcher);
         }
 
         static::creating(function ($model) {
@@ -38,21 +37,17 @@ trait HasParent
             $instance = new static;
 
             if ($instance->parentHasHasChildrenTrait()) {
-                $query->where($query->getModel()->getTable().'.'.$instance->getInheritanceColumn(), $instance->classToAlias(get_class($instance)));
+                $query->where($query->getModel()->getTable() . '.' . $instance->getInheritanceColumn(), $instance->classToAlias(get_class($instance)));
             }
         });
     }
 
-    /**
-     * @return bool
-     */
     public function parentHasHasChildrenTrait(): bool
     {
         return $this->hasChildren ?? false;
     }
 
     /**
-     * @return string
      * @throws ReflectionException
      */
     public function getTable(): string
@@ -65,18 +60,17 @@ trait HasParent
     }
 
     /**
-     * @return string
      * @throws ReflectionException
      */
     public function getForeignKey(): string
     {
-        return Str::snake(class_basename($this->getParentClass())).'_'.$this->primaryKey;
+        return Str::snake(class_basename($this->getParentClass())) . '_' . $this->primaryKey;
     }
 
     /**
-     * @param string $related
-     * @param null|Model $instance
-     * @return string
+     * @param  string  $related
+     * @param  null|Model  $instance
+     *
      * @throws ReflectionException
      */
     public function joiningTable($related, $instance = null): string
@@ -96,7 +90,6 @@ trait HasParent
     }
 
     /**
-     * @return string
      * @throws ReflectionException
      */
     public function getClassNameForRelationships(): string
@@ -107,7 +100,6 @@ trait HasParent
     /**
      * Get the class name for polymorphic relations.
      *
-     * @return string
      * @throws ReflectionException
      */
     public function getMorphClass(): string
@@ -116,11 +108,10 @@ trait HasParent
 
         return (new $parentClass)->getMorphClass();
     }
-    
+
     /**
      * Get the class name for poly-type collections
      *
-     * @return string
      * @throws ReflectionException
      */
     public function getClassNameForSerialization(): string
@@ -131,7 +122,6 @@ trait HasParent
     /**
      * Get the class name for Parent Class.
      *
-     * @return string
      * @throws ReflectionException
      */
     protected function getParentClass(): string
