@@ -143,18 +143,20 @@ trait HasParent
 
 
     /**
-     * Merge the fillable attributes for the model with Parent Class
+     * Merge the fillable attributes for the model with those of its Parent Class
      *
      * @return array<string>
      */
     public function getFillable()
     {
-
         $parentClass = $this->getParentClass();
+
         if ((new ReflectionClass($parentClass))->isAbstract()) {
+
             return $this->fillable;
         }
         $parentFillable = (new $parentClass)->getFillable();
+        
         return array_unique(array_merge($parentFillable, $this->fillable));
     }
 }

@@ -16,7 +16,9 @@ class ChildModelFillablesMergeWithParentModelFillablesTest extends TestCase
             'industry' => 'Technology',
             'skill_level' => 'Advanced',
         ]);
+
         $event = Event::first();
+
         $this->assertEquals($event->name, $workshop->name);
     }
 }
