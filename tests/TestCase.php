@@ -104,5 +104,11 @@ class TestCase extends BaseTestCase
             $table->string('type')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('tools', function ($table) {
+            $table->increments('id');
+            $table->string('type')->nullable();
+            $table->timestamps();
+        });
     }
 }
