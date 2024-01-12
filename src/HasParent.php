@@ -120,19 +120,6 @@ trait HasParent
     }
 
     /**
-     * Get the class name for Parent Class.
-     *
-     * @throws ReflectionException
-     */
-    protected function getParentClass(): string
-    {
-        static $parentClassName;
-
-        return $parentClassName ?: $parentClassName = (new ReflectionClass($this))->getParentClass()->getName();
-    }
-
-
-    /**
      * Merge the fillable attributes for the model with those of its Parent Class
      *
      * @return array<string>
@@ -146,7 +133,19 @@ trait HasParent
             return $this->fillable;
         }
         $parentFillable = (new $parentClass)->getFillable();
-        
+
         return array_unique(array_merge($parentFillable, $this->fillable));
+    }
+
+    /**
+     * Get the class name for Parent Class.
+     *
+     * @throws ReflectionException
+     */
+    protected function getParentClass(): string
+    {
+        static $parentClassName;
+
+        return $parentClassName ?: $parentClassName = (new ReflectionClass($this))->getParentClass()->getName();
     }
 }
