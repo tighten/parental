@@ -16,7 +16,7 @@ use Parental\Tests\TestCase;
 class TypeColumnCanBeAliasedTest extends TestCase
 {
     /** @test */
-    function type_column_values_can_accept_type_aliases()
+    public function type_column_values_can_accept_type_aliases()
     {
         Car::create(['type' => 'car']);
         Plane::create(['type' => Plane::class]);
@@ -28,7 +28,7 @@ class TypeColumnCanBeAliasedTest extends TestCase
     }
 
     /** @test */
-    function type_aliases_are_set_on_creation()
+    public function type_aliases_are_set_on_creation()
     {
         $car = Car::create();
 
@@ -36,7 +36,7 @@ class TypeColumnCanBeAliasedTest extends TestCase
     }
 
     /** @test */
-    function type_column_values_can_accept_type_aliases_from_abstract_parent()
+    public function type_column_values_can_accept_type_aliases_from_abstract_parent()
     {
         ChildFromAbstractParent::create(['type' => 'ChildFromAbstractParent']);
 
@@ -46,7 +46,7 @@ class TypeColumnCanBeAliasedTest extends TestCase
     }
 
     /** @test */
-    function enums_can_be_used_as_type_alias()
+    public function enums_can_be_used_as_type_alias()
     {
         if (phpversion() < 8.1) {
             $this->markTestSkipped('Enums are not supported in this version of PHP');

@@ -9,9 +9,6 @@ use Parental\HasParent;
 
 class NovaResourceProvider extends ServiceProvider
 {
-    /**
-     * @return void
-     */
     public function boot(): void
     {
         if (class_exists(Nova::class)) {
@@ -21,9 +18,6 @@ class NovaResourceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * @return void
-     */
     protected function setNovaResources(): void
     {
         $map = [];

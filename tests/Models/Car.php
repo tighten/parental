@@ -7,6 +7,6 @@ use Parental\HasParent;
 
 class Car extends Vehicle
 {
-    use HasParent;
     use HasFactory;
+    use HasParent;
 }
