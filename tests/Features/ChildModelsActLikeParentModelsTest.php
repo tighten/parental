@@ -5,14 +5,13 @@ namespace Parental\Tests\Features;
 use Parental\Tests\Models\Car;
 use Parental\Tests\Models\Driver;
 use Parental\Tests\Models\Passenger;
-use Parental\Tests\Models\Trip;
 use Parental\Tests\Models\Vehicle;
 use Parental\Tests\TestCase;
 
 class ChildModelsActLikeParentModelsTest extends TestCase
 {
     /** @test */
-    function vehicle_can_access_belongs_to_relationship_on_car_model()
+    public function vehicle_can_access_belongs_to_relationship_on_car_model()
     {
         $car = Car::create([
             'driver_id' => Driver::create(['name' => 'Joe'])->id,
@@ -24,7 +23,7 @@ class ChildModelsActLikeParentModelsTest extends TestCase
     }
 
     /** @test */
-    function vehicle_can_access_has_many_relationship_on_car_model()
+    public function vehicle_can_access_has_many_relationship_on_car_model()
     {
         $car = Car::create();
 
@@ -37,7 +36,7 @@ class ChildModelsActLikeParentModelsTest extends TestCase
     }
 
     /** @test */
-    function vehicle_can_access_many_to_many_relationship_on_car_model()
+    public function vehicle_can_access_many_to_many_relationship_on_car_model()
     {
         $car = Car::create();
 

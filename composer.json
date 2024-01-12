@@ -23,7 +23,8 @@
     },
     "require-dev": {
         "orchestra/testbench": "^7.0||^8.0",
-        "phpunit/phpunit": "^9.5.10||^10.0"
+        "phpunit/phpunit": "^9.5.10||^10.0",
+        "tightenco/duster": "^2.7"
     },
     "autoload": {
         "psr-4": {
@@ -35,5 +36,9 @@
             "Parental\\Tests\\": "tests/",
             "Database\\Factories\\": "tests/factories/"
         }
+    },
+    "scripts": {
+        "lint": "vendor/bin/duster lint",
+        "fix": "vendor/bin/duster fix"
     }
 }

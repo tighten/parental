@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use UnitEnum;
 
 trait HasChildren
 {
@@ -24,8 +25,7 @@ trait HasChildren
      * Register a model event with the dispatcher.
      *
      * @param  string  $event
-     * @param Closure|string  $callback
-     * @return void
+     * @param  Closure|string  $callback
      */
     protected static function registerModelEvent($event, $callback): void
     {
@@ -46,16 +46,13 @@ trait HasChildren
         }
     }
 
-    /**
-     * @return bool
-     */
     protected static function parentIsBooting(): bool
     {
         if (! isset(self::$parentBootMethods)) {
             self::$parentBootMethods[] = 'boot';
 
             foreach (class_uses_recursive(self::class) as $trait) {
-                self::$parentBootMethods[] = 'boot'.class_basename($trait);
+                self::$parentBootMethods[] = 'boot' . class_basename($trait);
             }
 
             self::$parentBootMethods = array_flip(self::$parentBootMethods);
@@ -131,14 +128,13 @@ trait HasChildren
      * @param  string|null  $foreignKey
      * @param  string|null  $ownerKey
      * @param  string|null  $relation
-     * @return BelongsTo
      */
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null): BelongsTo
     {
         $instance = $this->newRelatedInstance($related);
 
         if (is_null($foreignKey) && $instance->hasParent) {
-            $foreignKey = Str::snake($instance->getClassNameForRelationships()).'_'.$instance->getKeyName();
+            $foreignKey = Str::snake($instance->getClassNameForRelationships()) . '_' . $instance->getKeyName();
         }
 
         if (is_null($relation)) {
@@ -154,7 +150,6 @@ trait HasChildren
      * @param  string  $related
      * @param  string|null  $foreignKey
      * @param  string|null  $localKey
-     * @return HasMany
      */
     public function hasMany($related, $foreignKey = null, $localKey = null): HasMany
     {
@@ -171,7 +166,6 @@ trait HasChildren
      * @param  string|null  $parentKey
      * @param  string|null  $relatedKey
      * @param  string|null  $relation
-     * @return BelongsToMany
      */
     public function belongsToMany(
         $related, $table = null,
@@ -198,45 +192,25 @@ trait HasChildren
         );
     }
 
-    /**
-     * @return string
-     */
     public function getClassNameForRelationships(): string
     {
         return class_basename($this);
     }
 
-    /**
-     * @return string
-     */
     public function getInheritanceColumn(): string
     {
         return property_exists($this, 'childColumn') ? $this->childColumn : 'type';
     }
 
     /**
-     * @param array $attributes
-     * @return mixed
-     */
-    protected function getChildModel(array $attributes)
-    {
-        $className = $this->classFromAlias(
-            $attributes[$this->getInheritanceColumn()]
-        );
-
-        return new $className((array) $attributes);
-    }
-
-    /**
-     * @param mixed $aliasOrClass
-     * @return string
+     * @param  mixed  $aliasOrClass
      */
     public function classFromAlias($aliasOrClass): string
     {
         $childTypes = $this->getChildTypes();
 
         // Handling Enum casting for `type` column
-        if ($aliasOrClass instanceof \UnitEnum) {
+        if ($aliasOrClass instanceof UnitEnum) {
             $aliasOrClass = $aliasOrClass->value;
         }
 
@@ -247,10 +221,6 @@ trait HasChildren
         return $aliasOrClass;
     }
 
-    /**
-     * @param string $className
-     * @return string
-     */
     public function classToAlias(string $className): string
     {
         $childTypes = $this->getChildTypes();
@@ -262,9 +232,6 @@ trait HasChildren
         return $className;
     }
 
-    /**
-     * @return array
-     */
     public function getChildTypes(): array
     {
         if (method_exists($this, 'childTypes')) {
@@ -276,5 +243,17 @@ trait HasChildren
         }
 
         return [];
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getChildModel(array $attributes)
+    {
+        $className = $this->classFromAlias(
+            $attributes[$this->getInheritanceColumn()]
+        );
+
+        return new $className((array) $attributes);
     }
 }

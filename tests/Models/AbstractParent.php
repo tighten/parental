@@ -10,7 +10,7 @@ abstract class AbstractParent extends Model
     use HasChildren;
 
     protected $fillable = [
-        'type'
+        'type',
     ];
 
     protected $childTypes = [

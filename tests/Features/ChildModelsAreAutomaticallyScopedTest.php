@@ -17,7 +17,7 @@ use Parental\Tests\TestCase;
 class ChildModelsAreAutomaticallyScopedTest extends TestCase
 {
     /** @test */
-    function child_is_scoped_based_on_type_column()
+    public function child_is_scoped_based_on_type_column()
     {
         Car::create();
         Vehicle::create();
@@ -27,7 +27,7 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
     }
 
     /** @test */
-    function child_without_type_column_isnt_scoped()
+    public function child_without_type_column_isnt_scoped()
     {
         Admin::create();
         User::create();
@@ -37,7 +37,7 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
     }
 
     /** @test */
-    function child_is_scoped_when_accessed_from_belongs_to()
+    public function child_is_scoped_when_accessed_from_belongs_to()
     {
         $car = Car::create();
         $vehicle = Vehicle::create();
@@ -53,7 +53,7 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
     }
 
     /** @test */
-    function child_is_scoped_when_accessed_from_has_many()
+    public function child_is_scoped_when_accessed_from_has_many()
     {
         $driver = Driver::create(['name' => 'joe']);
         Car::create(['driver_id' => $driver->id]);
@@ -64,7 +64,7 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
     }
 
     /** @test */
-    function child_is_scoped_when_accessed_from_belongs_to_many()
+    public function child_is_scoped_when_accessed_from_belongs_to_many()
     {
         $car = Car::create();
         $vehicle = Vehicle::create();
@@ -76,7 +76,7 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
     }
 
     /** @test */
-    function child_is_scoped_when_accessed_from_has_one_through()
+    public function child_is_scoped_when_accessed_from_has_one_through()
     {
         // Create root with children
         $rootA = ParentNode::create(['name' => 'Root A']);
@@ -97,7 +97,7 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
     }
 
     /** @test */
-    function child_is_scoped_when_accessed_from_has_many_through()
+    public function child_is_scoped_when_accessed_from_has_many_through()
     {
         // Create root with children
         $rootA = ParentNode::create(['name' => 'Root A']);
