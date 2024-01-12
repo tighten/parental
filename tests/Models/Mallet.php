@@ -7,6 +7,6 @@ use Parental\HasParent;
 
 class Mallet extends Tool
 {
-    use HasParent;
     use HasFactory;
+    use HasParent;
 }

@@ -7,6 +7,6 @@ use Parental\HasParent;
 
 class ClawHammer extends Tool
 {
-    use HasParent;
     use HasFactory;
+    use HasParent;
 }

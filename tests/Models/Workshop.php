@@ -4,7 +4,9 @@ namespace Parental\Tests\Models;
 
 use Parental\HasParent;
 
-class InternationalTrip extends Trip
+class Workshop extends Event
 {
     use HasParent;
+
+    protected $fillable = ['industry', 'skill_level'];
 }

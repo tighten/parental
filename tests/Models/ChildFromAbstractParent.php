@@ -7,6 +7,6 @@ use Parental\HasParent;
 
 class ChildFromAbstractParent extends AbstractParent
 {
-    use HasParent;
     use HasFactory;
+    use HasParent;
 }

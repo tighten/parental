@@ -12,7 +12,7 @@ use Parental\Tests\TestCase;
 class ParentsAreAwareOfChildrenTest extends TestCase
 {
     /** @test */
-    function vehicle_all_method_returns_child_models()
+    public function vehicle_all_method_returns_child_models()
     {
         Car::create(['type' => Car::class]);
         Plane::create(['type' => Plane::class]);
@@ -24,7 +24,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     }
 
     /** @test */
-    function type_column_values_can_accept_type_aliases()
+    public function type_column_values_can_accept_type_aliases()
     {
         // Looks for "childTypes" property on Vehicle class.
         Car::create(['type' => 'car']);
@@ -37,7 +37,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     }
 
     /** @test */
-    function vehicle_query_builder_get_method_returns_child_models()
+    public function vehicle_query_builder_get_method_returns_child_models()
     {
         Car::create(['type' => Car::class]);
         Plane::create(['type' => Plane::class]);
@@ -51,7 +51,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     }
 
     /** @test */
-    function has_many_returns_child_models()
+    public function has_many_returns_child_models()
     {
         $driver = Driver::create(['name' => 'Joe']);
         Car::create([
@@ -67,7 +67,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     }
 
     /** @test */
-    function belongs_to_returns_child_models()
+    public function belongs_to_returns_child_models()
     {
         $car = Car::create(['type' => Car::class]);
         $passenger = Passenger::create([
@@ -81,7 +81,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     }
 
     /** @test */
-    function many_to_many_returns_child_models()
+    public function many_to_many_returns_child_models()
     {
         $car = Car::create(['type' => Car::class]);
         $trip = $car->trips()->create([]);

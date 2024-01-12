@@ -9,7 +9,6 @@ class ChildFromAbstractParentFactory extends Factory
 {
     protected $model = ChildFromAbstractParent::class;
 
-
     public function definition()
     {
         return [];
