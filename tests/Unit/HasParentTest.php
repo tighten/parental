@@ -2,9 +2,11 @@
 
 namespace Parental\Tests\Unit;
 
-use Illuminate\Database\Eloquent\Model;
-use Parental\HasParent;
 use Parental\Tests\TestCase;
+use Parental\Tests\Unit\HasParent\ChildModel;
+use Parental\Tests\Unit\HasParent\ChildModelWithoutTrait;
+use Parental\Tests\Unit\HasParent\ParentModel;
+use Parental\Tests\Unit\HasParent\RelatedModel;
 
 class HasParentTest extends TestCase
 {
@@ -33,24 +35,4 @@ class HasParentTest extends TestCase
         $this->assertEquals('parent_model_related_model', (new ChildModel)->joiningTable($related));
         $this->assertEquals('child_model_without_trait_related_model', (new ChildModelWithoutTrait)->joiningTable($related));
     }
-}
-
-class ParentModel extends Model
-{
-    //
-}
-
-class ChildModel extends ParentModel
-{
-    use HasParent;
-}
-
-class ChildModelWithoutTrait extends ParentModel
-{
-    //
-}
-
-class RelatedModel extends Model
-{
-    //
 }
