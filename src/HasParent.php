@@ -114,7 +114,7 @@ trait HasParent
      *
      * @throws ReflectionException
      */
-    public function getClassNameForSerialization(): string
+    public function getQueueableClassName(): string
     {
         return $this->getParentClass();
     }
