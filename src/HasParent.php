@@ -116,7 +116,7 @@ trait HasParent
 
         return (new $parentClass)->getMorphClass();
     }
-    
+
     /**
      * Get the class name for poly-type collections
      *
@@ -139,5 +139,24 @@ trait HasParent
         static $parentClassName;
 
         return $parentClassName ?: $parentClassName = (new ReflectionClass($this))->getParentClass()->getName();
+    }
+
+
+    /**
+     * Merge the fillable attributes for the model with those of its Parent Class
+     *
+     * @return array<string>
+     */
+    public function getFillable()
+    {
+        $parentClass = $this->getParentClass();
+
+        if ((new ReflectionClass($parentClass))->isAbstract()) {
+
+            return $this->fillable;
+        }
+        $parentFillable = (new $parentClass)->getFillable();
+        
+        return array_unique(array_merge($parentFillable, $this->fillable));
     }
 }
