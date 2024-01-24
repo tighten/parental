@@ -57,6 +57,7 @@ $admin->impersonate($user);
 ```
 
 ### What problem did we just solve?
+
 Without Parental, calling `Admin::first()` would throw an error because Laravel would be looking for an `admins` table. Laravel generates expected table names, as well as foreign keys and pivot table names, using the model's class name. By adding the `HasParent` trait to the Admin model, Laravel will now reference the parent model's class name `users`.
 
 ## Accessing Child Models from Parents
@@ -107,7 +108,6 @@ class Guest extends User
 }
 ```
 
-
 ```php
 use App\Models\Admin;
 use App\Models\Guest;
@@ -124,9 +124,11 @@ User::all();
 ```
 
 ### What problem did we just solve?
+
 Before, if we ran: `User::first()` we would only get back `User` models. By adding the `HasChildren` trait and a `type` column to the `users` table, running `User::first()` will return an instance of the child model (`Admin` or `Guest` in this case).
 
 ## Type Aliases
+
 If you don't want to store raw class names in the type column, you can override them using the `$childTypes` property.
 
 ```php
@@ -148,11 +150,12 @@ class User extends Model
 }
 ```
 
-Now, running `Admin::create()` will set the `type` column in the `users` table to `admin` instead of `App\Admin`.
+Now, running `Admin::create()` will set the `type` column in the `users` table to `admin` instead of `App\Models\Admin`.
 
 This feature is useful if you are working with an existing type column, or if you want to decouple application details from your database.
 
 ## Custom Type Column Name
+
 You can override the default type column by setting the `$childColumn` property on the parent model.
 
 ```php
@@ -172,6 +175,7 @@ class User extends Model
 ```
 
 ## Laravel Nova Support
+
 If you want to use share parent Nova resources with child models, you may register the following provider at the end of the boot method of your NovaServiceProvider:
 
 ```php
