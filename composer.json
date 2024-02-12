@@ -40,5 +40,7 @@
     "scripts": {
         "lint": "vendor/bin/duster lint",
         "fix": "vendor/bin/duster fix"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
