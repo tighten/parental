@@ -40,6 +40,9 @@ trait HasParent
                 $query->where($query->getModel()->getTable() . '.' . $instance->getInheritanceColumn(), $instance->classToAlias(get_class($instance)));
             }
         });
+
+        $parentObservedBy = (new static)->getParentClass()::resolveObserveAttributes();
+        static::observe($parentObservedBy);
     }
 
     public function parentHasHasChildrenTrait(): bool
