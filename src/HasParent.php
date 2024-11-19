@@ -41,8 +41,11 @@ trait HasParent
             }
         });
 
-        $parentObservedBy = (new static)->getParentClass()::resolveObserveAttributes();
-        static::observe($parentObservedBy);
+        
+        if (method_exists(static::class, 'resolveObserveAttributes')) {
+            $parentObservedBy = (new static)->getParentClass()::resolveObserveAttributes();
+            static::observe($parentObservedBy);
+        }
     }
 
     public function parentHasHasChildrenTrait(): bool
