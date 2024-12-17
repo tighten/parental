@@ -246,6 +246,16 @@ trait HasChildren
     }
 
     /**
+     * Create a child model from the current instance.
+     *
+     * @return static
+     */
+    public function toChildModel(): self
+    {
+        return $this->newInstance($this->getAttributes(), $this->exists);
+    }
+
+    /**
      * @return mixed
      */
     protected function getChildModel(array $attributes)
