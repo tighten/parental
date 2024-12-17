@@ -25,7 +25,7 @@ trait HasChildren
      * Register a model event with the dispatcher.
      *
      * @param  string  $event
-     * @param  Closure|string  $callback
+     * @param  \Illuminate\Events\QueuedClosure|callable|array|class-string  $callback
      */
     protected static function registerModelEvent($event, $callback): void
     {
@@ -124,10 +124,13 @@ trait HasChildren
     /**
      * Define an inverse one-to-one or many relationship.
      *
-     * @param  string  $related
+     * @template TRelatedModel of \Illuminate\Database\Eloquent\Model
+     *
+     * @param  class-string<TRelatedModel>  $related
      * @param  string|null  $foreignKey
      * @param  string|null  $ownerKey
      * @param  string|null  $relation
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TRelatedModel, $this>
      */
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null): BelongsTo
     {
@@ -147,9 +150,12 @@ trait HasChildren
     /**
      * Define a one-to-many relationship.
      *
-     * @param  string  $related
+     * @template TRelatedModel of \Illuminate\Database\Eloquent\Model
+     *
+     * @param  class-string<TRelatedModel>  $related
      * @param  string|null  $foreignKey
      * @param  string|null  $localKey
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TRelatedModel, $this>
      */
     public function hasMany($related, $foreignKey = null, $localKey = null): HasMany
     {
@@ -159,13 +165,16 @@ trait HasChildren
     /**
      * Define a many-to-many relationship.
      *
-     * @param  string  $related
-     * @param  string|null  $table
+     * @template TRelatedModel of \Illuminate\Database\Eloquent\Model
+     *
+     * @param  class-string<TRelatedModel>  $related
+     * @param  string|class-string<\Illuminate\Database\Eloquent\Model>|null  $table
      * @param  string|null  $foreignPivotKey
      * @param  string|null  $relatedPivotKey
      * @param  string|null  $parentKey
      * @param  string|null  $relatedKey
      * @param  string|null  $relation
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<TRelatedModel, $this>
      */
     public function belongsToMany(
         $related, $table = null,
