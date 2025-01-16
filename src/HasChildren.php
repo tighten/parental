@@ -254,7 +254,7 @@ trait HasChildren
             $attributes[$this->getInheritanceColumn()]
         );
 
-        $childModel = new $className();
+        $childModel = new $className;
     
         foreach ($attributes as $key => $value) {
             $childModel->setAttribute($key, $value);
