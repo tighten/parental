@@ -262,6 +262,12 @@ trait HasChildren
             $attributes[$this->getInheritanceColumn()]
         );
 
-        return new $className((array) $attributes);
+        $childModel = new $className;
+    
+        foreach ($attributes as $key => $value) {
+            $childModel->setAttribute($key, $value);
+        }
+    
+        return $childModel;
     }
 }
