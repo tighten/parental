@@ -1,15 +1,18 @@
 name: Tests
 
-on: [push, pull_request]
+on:
+  - push
+  - pull_request
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: true
       matrix:
         php: [8.0, 8.1, 8.2, 8.3]
-        laravel: [9.*, 10.*, 11.*]
+        laravel: ['9.*', '10.*', '11.*', '12.*']
         dependency-version: [prefer-stable]
         include:
           - laravel: 9.*
@@ -18,6 +21,8 @@ jobs:
             testbench: 8.*
           - laravel: 11.*
             testbench: 9.*
+          - laravel: 12.*
+            testbench: 10.*
         exclude:
           - laravel: 9.*
             php: 8.3
@@ -27,11 +32,14 @@ jobs:
             php: 8.0
           - laravel: 11.*
             php: 8.1
+          - laravel: 12.*
+            php: 8.0
+          - laravel: 12.*
+            php: 8.1
 
     name: PHP ${{ matrix.php }} - LARAVEL ${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
     steps:
-
       - name: Checkout Code
         uses: actions/checkout@v2
 
@@ -53,5 +61,6 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "symfony/console:>=4.3.4" --no-interaction --no-update
           composer remove "tightenco/duster" --dev --no-interaction --no-update
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+
       - name: Execute Tests
         run: ./vendor/bin/phpunit --testdox
