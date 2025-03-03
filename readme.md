@@ -1,4 +1,4 @@
-![Parental - Use single table inheritance in your Laravel App](parental-banner.png)
+![Parental - Use single table inheritance in your Laravel App](/art/parental-banner.png)
 
 # Parental
 
