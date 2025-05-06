@@ -106,6 +106,13 @@ class TestCase extends BaseTestCase
             $table->string('skill_level')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('animals', function ($table) {
+            $table->increments('id');
+            $table->string('type')->nullable();
+            $table->string('name')->nullable();
+            $table->timestamps();
+        });
     }
 
     protected function getEnvironmentSetUp($app)

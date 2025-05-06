@@ -16,6 +16,11 @@ trait HasChildren
     protected static $parentBootMethods;
 
     /**
+     * @var array
+     */
+    protected static $parentClasses;
+
+    /**
      * @var bool
      */
     protected $hasChildren = true;
@@ -57,11 +62,21 @@ trait HasChildren
             self::$parentBootMethods = array_flip(self::$parentBootMethods);
         }
 
-        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $trace) {
-            $class = isset($trace['class']) ? $trace['class'] : null;
-            $function = isset($trace['function']) ? $trace['function'] : '';
+        if (! isset(self::$parentClasses)) {
+            foreach (class_parents(self::class) as $parent) {
+                self::$parentClasses[$parent] = true;
+            }
+        }
 
-            if ($class === self::class && isset(self::$parentBootMethods[$function])) {
+        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $trace) {
+            if (! isset($trace['class']) || ! isset($trace['function'])) {
+                continue;
+            }
+
+            $class = $trace['class'];
+            $function = $trace['function'];
+
+            if (($class === self::class || isset(self::$parentClasses[$class])) && isset(self::$parentBootMethods[$function])) {
                 return true;
             }
         }
