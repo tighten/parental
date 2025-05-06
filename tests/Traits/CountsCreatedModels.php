@@ -6,10 +6,8 @@ use Parental\Tests\Observers\ModelCreatedObserver;
 
 trait CountsCreatedModels
 {
-    static int $created = 0;
-
     public static function bootCountsCreatedModels(): void
     {
-        static::observe(new ModelCreatedObserver());
+        static::observe(new ModelCreatedObserver);
     }
 }

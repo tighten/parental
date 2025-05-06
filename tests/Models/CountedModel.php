@@ -9,7 +9,7 @@ class CountedModel extends Model
 {
     use CountsCreatedModels;
 
-    static int $created = 0;
+    public static int $created = 0;
 
     protected $fillable = [
         'type', 'name',
