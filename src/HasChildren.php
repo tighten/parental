@@ -264,4 +264,22 @@ trait HasChildren
 
         return new $className((array) $attributes);
     }
+
+    /**
+     * Convert the current model instance into another child type.
+     */
+    public function become($class)
+    {
+        return tap(new $class($attributes = $this->getAttributes()), function ($instance) use ($class, $attributes) {
+            $instance->setRawAttributes(array_merge($attributes, [
+                $this->getInheritanceColumn() => $this->classToAlias($class),
+            ]));
+
+            $instance->exists = true;
+
+            $instance->setConnection($this->getConnectionName());
+
+            $instance->setRelations($this->relations);
+        });
+    }
 }
