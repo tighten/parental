@@ -254,18 +254,6 @@ trait HasChildren
     }
 
     /**
-     * @return mixed
-     */
-    protected function getChildModel(array $attributes)
-    {
-        $className = $this->classFromAlias(
-            $attributes[$this->getInheritanceColumn()]
-        );
-
-        return new $className((array) $attributes);
-    }
-
-    /**
      * Convert the current model instance into another child type.
      */
     public function become($class)
@@ -281,5 +269,17 @@ trait HasChildren
 
             $instance->setRelations($this->relations);
         });
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getChildModel(array $attributes)
+    {
+        $className = $this->classFromAlias(
+            $attributes[$this->getInheritanceColumn()]
+        );
+
+        return new $className((array) $attributes);
     }
 }
