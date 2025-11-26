@@ -229,7 +229,7 @@ trait HasChildren
         return $aliasOrClass;
     }
 
-    public function classToAlias(string $className): string
+    public function classToAlias(string $className): mixed
     {
         $childTypes = $this->getChildTypes();
 
