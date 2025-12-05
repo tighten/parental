@@ -106,6 +106,12 @@ class TestCase extends BaseTestCase
             $table->string('skill_level')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('messages', function ($table) {
+            $table->increments('id');
+            $table->integer('type');
+            $table->timestamps();
+        });
     }
 
     protected function getEnvironmentSetUp($app)
