@@ -2,7 +2,10 @@
 
 namespace Parental\Tests\Features;
 
+use Parental\Tests\Models\Animal;
 use Parental\Tests\Models\Car;
+use Parental\Tests\Models\Cat;
+use Parental\Tests\Models\Dog;
 use Parental\Tests\Models\Train;
 use Parental\Tests\Models\Vehicle;
 use Parental\Tests\Observers\CarObserver;
@@ -92,5 +95,14 @@ class ParentsObserveChildrenTest extends TestCase
 
         $car = Car::create();
         $this->assertEquals(1, $car->boot_count);
+    }
+
+    /** @test */
+    public function registering_events_in_parent_trait_only_triggers_once()
+    {
+        Cat::create();
+        Dog::create();
+
+        $this->assertEquals(2, Animal::$created);
     }
 }
