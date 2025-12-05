@@ -176,7 +176,7 @@ class User extends Model
 
 ## Transforming Models Between Types
 
-You can transform a model from one child type to another using the `become()` method.
+You may transform a model from one type to another using the `become()` method.
 
 ```php
 namespace App\Models;
@@ -220,11 +220,11 @@ class ShippedOrder extends Order
 ```
 
 ```php
-use App\Models\PendingOrder;
+use App\Models\Order;
 use App\Models\ShippedOrder;
 
 // Retrieve a pending order
-$order = PendingOrder::first();
+$order = Order::first();
 
 // Ship the order by transforming it
 $order = $order->become(ShippedOrder::class);
@@ -235,7 +235,9 @@ $order->save();
 
 ### What problem did we just solve?
 
-The `become()` method allows you to convert a model from one child type to another without losing any data. This is useful when you need to change the state or type of an existing record, such as transitioning an order from pending to shipped, or converting a draft post to a published post.
+The `become()` method will return a new instance of the specified child model with all the attributes of the original model. You must call `save()` on the returned model to persist the change to the database. This allows you to easily transition a model between different types while maintaining its data integrity, such as changing an order from pending to shipped, or a draft post to a published post.
+
+This is also useful when you're using observers or callbacks, since the specific child model's behavior will be triggered after the transition.
 
 ## Laravel Nova Support
 

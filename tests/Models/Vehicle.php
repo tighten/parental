@@ -9,6 +9,8 @@ class Vehicle extends Model
 {
     use HasChildren;
 
+    public $boot_count = 0;
+
     protected $fillable = [
         'type', 'driver_id',
     ];

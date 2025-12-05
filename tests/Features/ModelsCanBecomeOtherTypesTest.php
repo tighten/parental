@@ -80,4 +80,27 @@ class ModelsCanBecomeOtherTypesTest extends TestCase
 
         $this->assertEquals('mallet', $mallet->type);
     }
+
+    /** @test */
+    public function come_calls_model_events_on_specified_model(): void
+    {
+        $carEventCalled = false;
+
+        Car::saved(function () use (&$carEventCalled) {
+            $carEventCalled = true;
+        });
+
+        $vehicle = Vehicle::create(['type' => 'truck']);
+
+        $this->assertFalse($carEventCalled);
+
+        $car = $vehicle->become(Car::class);
+        $car->save();
+
+        $this->assertInstanceOf(Car::class, $car);
+        $this->assertEquals('car', $car->type);
+        $this->assertEquals($vehicle->id, $car->id);
+
+        $this->assertTrue($carEventCalled);
+    }
 }
