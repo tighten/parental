@@ -183,6 +183,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Parental\HasChildren;
+use Parental\HasParent;
 
 class Order extends Model
 {
@@ -195,23 +196,11 @@ class Order extends Model
         'shipped' => ShippedOrder::class,
     ];
 }
-```
-
-```php
-namespace App\Models;
-
-use Parental\HasParent;
 
 class PendingOrder extends Order
 {
     use HasParent;
 }
-```
-
-```php
-namespace App\Models;
-
-use Parental\HasParent;
 
 class ShippedOrder extends Order
 {
