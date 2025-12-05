@@ -2,6 +2,7 @@
 
 namespace Parental\Tests\Features;
 
+use Illuminate\Support\Facades\Event;
 use Parental\Tests\Models\Car;
 use Parental\Tests\Models\ClawHammer;
 use Parental\Tests\Models\Mallet;
@@ -102,5 +103,32 @@ class ModelsCanBecomeOtherTypesTest extends TestCase
         $this->assertEquals($vehicle->id, $car->id);
 
         $this->assertTrue($carEventCalled);
+    }
+
+    /** @test */
+    public function fires_becoming_model_event(): void
+    {
+        $becomingEventCalledCount = 0;
+
+        Event::listen('eloquent.becoming: ' . Car::class, function () use (&$becomingEventCalledCount) {
+            $becomingEventCalledCount++;
+        });
+
+        Car::becoming(function () use (&$becomingEventCalledCount) {
+            $becomingEventCalledCount++;
+        });
+
+        $vehicle = Vehicle::create(['type' => 'truck']);
+
+        $this->assertEquals(0, $becomingEventCalledCount);
+
+        $car = $vehicle->become(Car::class);
+        $car->save();
+
+        $this->assertInstanceOf(Car::class, $car);
+        $this->assertEquals('car', $car->type);
+        $this->assertEquals($vehicle->id, $car->id);
+
+        $this->assertEquals(2, $becomingEventCalledCount);
     }
 }

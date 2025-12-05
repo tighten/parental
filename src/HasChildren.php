@@ -21,6 +21,16 @@ trait HasChildren
     protected $hasChildren = true;
 
     /**
+     * Register a becoming model event with the dispatcher.
+     *
+     * @param  \Illuminate\Events\QueuedClosure|callable|array|class-string  $callback
+     */
+    public static function becoming($callback): void
+    {
+        static::registerModelEvent('becoming', $callback);
+    }
+
+    /**
      * Register a model event with the dispatcher.
      *
      * @param  string  $event
@@ -268,6 +278,8 @@ trait HasChildren
             $instance->setConnection($this->getConnectionName());
 
             $instance->setRelations($this->relations);
+
+            $instance->fireModelEvent('becoming', false);
         });
     }
 
