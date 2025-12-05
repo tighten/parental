@@ -21,6 +21,16 @@ trait HasChildren
     protected $hasChildren = true;
 
     /**
+     * Register a becoming model event with the dispatcher.
+     *
+     * @param  \Illuminate\Events\QueuedClosure|callable|array|class-string  $callback
+     */
+    public static function becoming($callback): void
+    {
+        static::registerModelEvent('becoming', $callback);
+    }
+
+    /**
      * Register a model event with the dispatcher.
      *
      * @param  string  $event
@@ -251,6 +261,31 @@ trait HasChildren
         }
 
         return [];
+    }
+
+    /**
+     * Convert the current model instance into another child type.
+     *
+     * @template T of object
+     *
+     * @param  class-string<T>  $class
+     * @return new<T>
+     */
+    public function become(string $class): object
+    {
+        return tap(new $class($attributes = $this->getAttributes()), function ($instance) use ($class, $attributes) {
+            $instance->setRawAttributes(array_merge($attributes, [
+                $this->getInheritanceColumn() => $this->classToAlias($class),
+            ]));
+
+            $instance->exists = true;
+
+            $instance->setConnection($this->getConnectionName());
+
+            $instance->setRelations($this->relations);
+
+            $instance->fireModelEvent('becoming', false);
+        });
     }
 
     /**

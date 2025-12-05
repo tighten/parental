@@ -174,6 +174,68 @@ class User extends Model
 }
 ```
 
+## Transforming Models Between Types
+
+You may transform a model from one type to another using the `become()` method.
+
+```php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Parental\HasChildren;
+use Parental\HasParent;
+
+class Order extends Model
+{
+    use HasChildren;
+
+    protected $fillable = ['type', 'total'];
+
+    protected $childTypes = [
+        'pending' => PendingOrder::class,
+        'shipped' => ShippedOrder::class,
+    ];
+}
+
+class PendingOrder extends Order
+{
+    use HasParent;
+}
+
+class ShippedOrder extends Order
+{
+    use HasParent;
+}
+```
+
+```php
+use App\Models\Order;
+use App\Models\ShippedOrder;
+
+// Retrieve a pending order
+$order = Order::first();
+
+// Ship the order by transforming it
+$order = $order->become(ShippedOrder::class);
+
+// Updates the "type" column to "shipped" and returns a ShippedOrder instance
+$order->save();
+```
+
+### What problem did we just solve?
+
+The `become()` method will return a new instance of the specified child model with all the attributes of the original model. You must call `save()` on the returned model to persist the change to the database. This allows you to easily transition a model between different types while maintaining its data integrity, such as changing an order from pending to shipped, or a draft post to a published post.
+
+This is also useful when you're using observers or callbacks, since the specific child model's behavior will be triggered after the transition.
+
+A new model event is fired when a model is _becoming_ another type, you may listen to it like so:
+
+```php
+ShippedOrder::becoming(function ($shippedOrder) {
+    // Do something before the model is saved...
+});
+```
+
 ## Laravel Nova Support
 
 If you want to use share parent Nova resources with child models, you may register the following provider at the end of the boot method of your NovaServiceProvider:
