@@ -265,8 +265,13 @@ trait HasChildren
 
     /**
      * Convert the current model instance into another child type.
+     *
+     * @template T of object
+     *
+     * @param  class-string<T>  $class
+     * @return new<T>
      */
-    public function become($class)
+    public function become(string $class): object
     {
         return tap(new $class($attributes = $this->getAttributes()), function ($instance) use ($class, $attributes) {
             $instance->setRawAttributes(array_merge($attributes, [
