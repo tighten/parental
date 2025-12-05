@@ -8,4 +8,3 @@ class TextMessage extends Message
 {
     use HasParent;
 }
-
