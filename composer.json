@@ -1,46 +1,46 @@
 {
-  "name": "tightenco/parental",
-  "description": "A simple eloquent trait that allows relationships to be accessed through child models.",
-  "license": "MIT",
-  "authors": [
-    {
-      "role": "author",
-      "name": "Caleb Porzio",
-      "email": "calebporzio@gmail.com",
-      "homepage": "https://calebporzio.com/"
+    "name": "tightenco/parental",
+    "description": "A simple eloquent trait that allows relationships to be accessed through child models.",
+    "license": "MIT",
+    "authors": [
+        {
+            "role": "author",
+            "name": "Caleb Porzio",
+            "email": "calebporzio@gmail.com",
+            "homepage": "https://calebporzio.com/"
+        },
+        {
+            "role": "developer",
+            "name": "Steve McDougall",
+            "email": "juststevemcd@gmail.com",
+            "homepage": "https://www.juststeveking.uk/"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/database": "^10.0||^11.0||^12.0",
+        "illuminate/events": "^10.0||^11.0||^12.0"
     },
-    {
-      "role": "developer",
-      "name": "Steve McDougall",
-      "email": "juststevemcd@gmail.com",
-      "homepage": "https://www.juststeveking.uk/"
-    }
-  ],
-  "require": {
-    "php": "^8.1",
-    "illuminate/database": "^10.0||^11.0||^12.0",
-    "illuminate/events": "^10.0||^11.0||^12.0"
-  },
-  "require-dev": {
-    "orchestra/testbench": "^8.0||^9.0||^10.0",
-    "phpunit/phpunit": "^10.5||^11.5.3",
-    "tightenco/duster": "^3.1"
-  },
-  "autoload": {
-    "psr-4": {
-      "Parental\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Parental\\Tests\\": "tests/",
-      "Database\\Factories\\": "tests/factories/"
-    }
-  },
-  "scripts": {
-    "lint": "vendor/bin/duster lint",
-    "fix": "vendor/bin/duster fix"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "require-dev": {
+        "orchestra/testbench": "^8.0||^9.0||^10.0",
+        "phpunit/phpunit": "^10.5||^11.5.3",
+        "tightenco/duster": "^3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Parental\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Parental\\Tests\\": "tests/",
+            "Database\\Factories\\": "tests/factories/"
+        }
+    },
+    "scripts": {
+        "lint": "vendor/bin/duster lint",
+        "fix": "vendor/bin/duster fix"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
