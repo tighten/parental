@@ -51,4 +51,24 @@ class EagerLoadingTest extends TestCase
 
         $this->assertEquals($messages->firstWhere(fn ($message) => $message instanceof TextMessage)->images_count, 1);
     }
+
+    /** @test */
+    public function eager_load_children_on_paginator(): void
+    {
+        $room = Room::create(['name' => 'General']);
+
+        $textMessage = TextMessage::create(['room_id' => $room->getKey()]);
+        $textMessage->images()->create(['url' => 'https://example.com/image1.jpg']);
+
+        $video = Video::create(['url' => 'https://example.com/video1.mp5']);
+        VideoMessage::create(['room_id' => $room->getKey(), 'video_id' => $video->getKey()]);
+
+        $messages = $room->messages()->paginate();
+
+        $messages->loadChildrenCount([
+            TextMessage::class => ['images'],
+        ]);
+
+        $this->assertEquals($messages->firstWhere(fn ($message) => $message instanceof TextMessage)->images_count, 1);
+    }
 }
