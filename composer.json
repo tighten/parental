@@ -41,6 +41,13 @@
         "lint": "vendor/bin/duster lint",
         "fix": "vendor/bin/duster fix"
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "\\Parental\\Providers\\ParentalServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
