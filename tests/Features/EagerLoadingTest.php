@@ -65,6 +65,9 @@ class EagerLoadingTest extends TestCase
 
         $messages = $room->messages()->paginate();
 
+        // This call would ideally return back the paginator itself, but since it's being
+        // forwarded to the collection, it returns the collection. The paginator isn't
+        // macroable, so we can't change it. Use tap if you need the paginator back.
         $messages->loadChildrenCount([
             TextMessage::class => ['images'],
         ]);
