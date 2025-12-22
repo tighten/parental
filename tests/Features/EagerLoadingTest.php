@@ -74,4 +74,36 @@ class EagerLoadingTest extends TestCase
 
         $this->assertEquals($messages->firstWhere(fn ($message) => $message instanceof TextMessage)->images_count, 1);
     }
+
+    /** @test */
+    public function eager_load_from_model(): void
+    {
+        $textMessage = TextMessage::create();
+        $textMessage->images()->create(['url' => 'https://example.com/image1.jpg']);
+
+        $message = Message::find($textMessage->getKey());
+
+        $message->loadChildren([
+            TextMessage::class => ['images'],
+            VideoMessage::class => ['video'],
+        ]);
+
+        $this->assertTrue($message->relationLoaded('images'));
+    }
+
+    /** @test */
+    public function eager_load_counts_on_model(): void
+    {
+        $textMessage = TextMessage::create();
+        $textMessage->images()->create(['url' => 'https://example.com/image1.jpg']);
+
+        $message = Message::find($textMessage->getKey());
+
+        $message->loadChildrenCount([
+            TextMessage::class => ['images'],
+            VideoMessage::class => ['video'],
+        ]);
+
+        $this->assertEquals(1, $message->images_count);
+    }
 }

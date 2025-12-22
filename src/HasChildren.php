@@ -289,6 +289,26 @@ trait HasChildren
     }
 
     /**
+     * Eager load relationships on single-table inheritance models.
+     */
+    public function loadChildren(array $relations): static
+    {
+        $this->load($relations[get_class($this)] ?? []);
+
+        return $this;
+    }
+
+    /**
+     * Eager load relationship counts on single-table inheritance models.
+     */
+    public function loadChildrenCount(array $relations): static
+    {
+        $this->loadCount($relations[get_class($this)] ?? []);
+
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     protected function getChildModel(array $attributes)
