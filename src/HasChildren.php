@@ -2,7 +2,6 @@
 
 namespace Parental;
 
-use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -88,8 +87,7 @@ trait HasChildren
     /**
      * Eager-loads the relations on single-table inheritance models.
      */
-    #[Scope]
-    public function childrenWith(EloquentBuilder $query, array $relations): void
+    public function scopeChildrenWith(EloquentBuilder $query, array $relations): void
     {
         $query->afterQuery(fn ($models) => $models->loadChildren($relations));
     }
@@ -97,8 +95,7 @@ trait HasChildren
     /**
      * Eager-loads the relations counts on single-table inheritance models.
      */
-    #[Scope]
-    public function childrenWithCount(EloquentBuilder $query, array $relations): void
+    public function scopeChildrenWithCount(EloquentBuilder $query, array $relations): void
     {
         $query->afterQuery(fn ($models) => $models->loadChildrenCount($relations));
     }
