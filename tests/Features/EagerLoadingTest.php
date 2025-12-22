@@ -3,6 +3,7 @@
 namespace Parental\Tests\Features;
 
 use Parental\Tests\Models\Message;
+use Parental\Tests\Models\Room;
 use Parental\Tests\Models\TextMessage;
 use Parental\Tests\Models\Video;
 use Parental\Tests\Models\VideoMessage;
@@ -97,5 +98,83 @@ class EagerLoadingTest extends TestCase
         ]);
 
         $this->assertEquals(1, $message->images_count);
+    }
+
+    /** @test */
+    public function eager_load_children_from_query(): void
+    {
+        $textMessage = TextMessage::create();
+        $textMessage->images()->create(['url' => 'https://example.com/image1.jpg']);
+
+        $video = Video::create(['url' => 'https://example.com/video1.mp5']);
+        VideoMessage::create(['video_id' => $video->getKey()]);
+
+        $messages = Message::query()->childrenWith([
+            TextMessage::class => ['images'],
+            VideoMessage::class => ['video'],
+        ])->get();
+
+        $this->assertCount(2, $messages);
+        $this->assertTrue($messages->whereInstanceOf(TextMessage::class)->every->relationLoaded('images'));
+        $this->assertTrue($messages->whereInstanceOf(VideoMessage::class)->every->relationLoaded('video'));
+    }
+
+    /** @test */
+    public function eager_load_children_count_from_query(): void
+    {
+        $textMessage = TextMessage::create();
+        $textMessage->images()->create(['url' => 'https://example.com/image1.jpg']);
+
+        $video = Video::create(['url' => 'https://example.com/video1.mp5']);
+        VideoMessage::create(['video_id' => $video->getKey()]);
+
+        $messages = Message::query()->childrenWithCount([
+            TextMessage::class => ['images'],
+        ])->get();
+
+        $this->assertCount(2, $messages);
+        $this->assertEquals(1, $messages->firstWhere(fn ($message) => $message instanceof TextMessage)->images_count);
+        $this->assertNull($messages->firstWhere(fn ($message) => $message instanceof VideoMessage)->images_count);
+    }
+
+    /** @test */
+    public function eager_load_children_from_relationship_query(): void
+    {
+        $room = Room::create(['name' => 'General']);
+
+        $textMessage = TextMessage::create(['room_id' => $room->getKey()]);
+        $textMessage->images()->create(['url' => 'https://example.com/image1.jpg']);
+
+        $video = Video::create(['url' => 'https://example.com/video1.mp5']);
+        VideoMessage::create(['video_id' => $video->getKey(), 'room_id' => $room->getKey()]);
+
+        $messages = $room->messages()->childrenWith([
+            TextMessage::class => ['images'],
+            VideoMessage::class => ['video'],
+        ])->get();
+
+        $this->assertCount(2, $messages);
+        $this->assertTrue($messages->whereInstanceOf(TextMessage::class)->every->relationLoaded('images'));
+        $this->assertTrue($messages->whereInstanceOf(VideoMessage::class)->every->relationLoaded('video'));
+    }
+
+    /** @test */
+    public function eager_load_children_count_from_relationship_query(): void
+    {
+        $room = Room::create(['name' => 'General']);
+
+        $textMessage = TextMessage::create(['room_id' => $room->getKey()]);
+        $textMessage->images()->create(['url' => 'https://example.com/image1.jpg']);
+
+        $video = Video::create(['url' => 'https://example.com/video1.mp5']);
+        VideoMessage::create(['video_id' => $video->getKey(), 'room_id' => $room->getKey()]);
+
+        $messages = $room->messages()->childrenWithCount([
+            TextMessage::class => ['images'],
+        ])->get();
+
+        $this->assertCount(2, $messages);
+        $this->assertEquals(1, $messages->firstWhere(fn ($message) => $message instanceof TextMessage)->images_count);
+        $this->assertNull($messages->firstWhere(fn ($message) => $message instanceof VideoMessage)->images_count);
     }
 }
