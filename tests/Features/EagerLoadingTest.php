@@ -2,7 +2,7 @@
 
 namespace Parental\Tests\Features;
 
-use Parental\Tests\Models\Room;
+use Parental\Tests\Models\Message;
 use Parental\Tests\Models\TextMessage;
 use Parental\Tests\Models\Video;
 use Parental\Tests\Models\VideoMessage;
@@ -13,16 +13,13 @@ class EagerLoadingTest extends TestCase
     /** @test */
     public function eager_load_children_on_collection(): void
     {
-        $room = Room::create(['name' => 'General']);
-
-        $textMessage = TextMessage::create(['room_id' => $room->getKey()]);
+        $textMessage = TextMessage::create();
         $textMessage->images()->create(['url' => 'https://example.com/image1.jpg']);
 
         $video = Video::create(['url' => 'https://example.com/video1.mp5']);
-        VideoMessage::create(['room_id' => $room->getKey(), 'video_id' => $video->getKey()]);
+        VideoMessage::create(['video_id' => $video->getKey()]);
 
-        $messages = $room->messages;
-
+        $messages = Message::all();
         $messages->loadChildren([
             TextMessage::class => ['images'],
             VideoMessage::class => ['video'],
@@ -35,16 +32,13 @@ class EagerLoadingTest extends TestCase
     /** @test */
     public function eager_load_children_count_on_collection(): void
     {
-        $room = Room::create(['name' => 'General']);
-
-        $textMessage = TextMessage::create(['room_id' => $room->getKey()]);
+        $textMessage = TextMessage::create();
         $textMessage->images()->create(['url' => 'https://example.com/image1.jpg']);
 
         $video = Video::create(['url' => 'https://example.com/video1.mp5']);
-        VideoMessage::create(['room_id' => $room->getKey(), 'video_id' => $video->getKey()]);
+        VideoMessage::create(['video_id' => $video->getKey()]);
 
-        $messages = $room->messages;
-
+        $messages = Message::all();
         $messages->loadChildrenCount([
             TextMessage::class => ['images'],
         ]);
@@ -55,15 +49,13 @@ class EagerLoadingTest extends TestCase
     /** @test */
     public function eager_load_children_on_paginator(): void
     {
-        $room = Room::create(['name' => 'General']);
-
-        $textMessage = TextMessage::create(['room_id' => $room->getKey()]);
+        $textMessage = TextMessage::create();
         $textMessage->images()->create(['url' => 'https://example.com/image1.jpg']);
 
         $video = Video::create(['url' => 'https://example.com/video1.mp5']);
-        VideoMessage::create(['room_id' => $room->getKey(), 'video_id' => $video->getKey()]);
+        VideoMessage::create(['video_id' => $video->getKey()]);
 
-        $messages = $room->messages()->paginate();
+        $messages = Message::query()->paginate();
 
         // This call would ideally return back the paginator itself, but since it's being
         // forwarded to the collection, it returns the collection. The paginator isn't
