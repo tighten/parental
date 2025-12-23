@@ -11,6 +11,15 @@ use Parental\Tests\TestCase;
 
 class EagerLoadingTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (version_compare(app()->version(), '11.0.0', '<')) {
+            $this->markTestSkipped('Eager loading macros are only available in Laravel 11 and above.');
+        }
+    }
+
     /** @test */
     public function eager_load_children_on_collection(): void
     {
