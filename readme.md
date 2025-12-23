@@ -238,6 +238,9 @@ ShippedOrder::becoming(function ($shippedOrder) {
 
 ## Eager Loading Child Models
 
+> [!WARNING]
+> Eager-loading relationships is only supported on Laravel 11 and above.
+
 To help with eager-loading relationships on child models, Parental provides a set of helpers that you may use in your queries. For the examples, we'll use the following models:
 
 ```php
