@@ -244,14 +244,6 @@ ShippedOrder::becoming(function ($shippedOrder) {
 To help with eager-loading relationships on child models, Parental provides a set of helpers that you may use in your queries. For the examples, we'll use the following models:
 
 ```php
-class Room extends Model
-{
-    public function messages(): HasMany
-    {
-        return $this->hasMany(Message::class);
-    }
-}
-
 class Message extends Model
 {
     use HasChildren;
@@ -351,13 +343,30 @@ $messages = Message::query()->childrenWith([
     TextMessage::class => ['mentions'],
     ImageMessage::class => ['attachments'],
 ])->get();
+```
 
+You may also eager-load from a relationship. For instance, if we had a `Room` parent model that had messages:
+
+```php
+class Room extends Model
+{
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }
+}
+```
+
+Then, we could eager-load child relationships like so:
+
+```php
 // From a relationship...
 $room = Room::first();
 $messages = $room->messages()->childrenWith([
     TextMessage::class => ['mentions'],
     ImageMessage::class => ['attachments'],
 ])->get();
+
 ```
 
 This will ensure that the appropriate relationships are eager-loaded for each child model in the result set based on its type.
