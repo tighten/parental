@@ -2,12 +2,18 @@
 
 namespace Parental;
 
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Parental\Exceptions\EagerLoadingException;
 use UnitEnum;
 
+/**
+ * @method static EloquentBuilder childrenWith(array $relations) Eager-loads relations on single-table inheritance models.
+ * @method static EloquentBuilder childrenWith(array $relations) Eager-loads relations on single-table inheritance models.
+ */
 trait HasChildren
 {
     /**
@@ -77,6 +83,26 @@ trait HasChildren
         }
 
         return false;
+    }
+
+    /**
+     * Eager-loads the relations on single-table inheritance models.
+     */
+    public function scopeChildrenWith(EloquentBuilder $query, array $relations): void
+    {
+        EagerLoadingException::throwOnUnsupportedLaravelVersions();
+
+        $query->afterQuery(fn ($models) => $models->loadChildren($relations));
+    }
+
+    /**
+     * Eager-loads the relations counts on single-table inheritance models.
+     */
+    public function scopeChildrenWithCount(EloquentBuilder $query, array $relations): void
+    {
+        EagerLoadingException::throwOnUnsupportedLaravelVersions();
+
+        $query->afterQuery(fn ($models) => $models->loadChildrenCount($relations));
     }
 
     /**
@@ -286,6 +312,30 @@ trait HasChildren
 
             $instance->fireModelEvent('becoming', false);
         });
+    }
+
+    /**
+     * Eager load relationships on single-table inheritance models.
+     */
+    public function loadChildren(array $relations): static
+    {
+        EagerLoadingException::throwOnUnsupportedLaravelVersions();
+
+        $this->load($relations[get_class($this)] ?? []);
+
+        return $this;
+    }
+
+    /**
+     * Eager load relationship counts on single-table inheritance models.
+     */
+    public function loadChildrenCount(array $relations): static
+    {
+        EagerLoadingException::throwOnUnsupportedLaravelVersions();
+
+        $this->loadCount($relations[get_class($this)] ?? []);
+
+        return $this;
     }
 
     /**

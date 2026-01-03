@@ -236,6 +236,160 @@ ShippedOrder::becoming(function ($shippedOrder) {
 });
 ```
 
+## Eager Loading Child Models
+
+> [!WARNING]
+> Eager-loading relationships is only supported on Laravel 11 and above.
+
+To help with eager-loading relationships on child models, Parental provides a set of helpers that you may use in your queries. For the examples, we'll use the following models:
+
+```php
+class Message extends Model
+{
+    use HasChildren;
+
+    protected $fillable = ['type', 'content'];
+
+    protected $childTypes = [
+        'text' => TextMessage::class,
+        'image' => ImageMessage::class,
+    ];
+}
+
+class TextMessage extends Message
+{
+    use HasParent;
+
+    public function mentions(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
+}
+
+class ImageMessage extends Message
+{
+    use HasParent;
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(Attachment::class);
+    }
+}
+```
+
+### Eager Loading From Model Instance
+
+You may eager-load relationships of different models from a parent model instance using the `loadChildren` method:
+
+```php
+$message = Message::first();
+
+$message->loadChildren([
+    TextMessage::class => ['mentions'],
+    ImageMessage::class => ['attachments'],
+]);
+```
+
+This will ensure that, if `$message` is an instance of `TextMessage`, the `mentions` relationship will be eager-loaded. If it's an instance of `ImageMessage`, the `attachments` relationship will be eager-loaded.
+
+Alternatively, you may eager-load the relationship counts using the `loadChildrenCount` method:
+
+```php
+$message = Message::first();
+
+$message->loadChildrenCount([
+    TextMessage::class => ['mentions'],
+    ImageMessage::class => ['attachments'],
+]);
+```
+
+This will ensure that, if `$message` is an instance of `TextMessage`, the `mentions_count` attribute will be filled. If it's an instance of `ImageMessage`, the `attachments_count` attribute will be filled.
+
+### Eager Loading From Eloquent Collection
+
+You may eager-load relationships from an Eloquent Collection using the `loadChildren` method:
+
+```php
+$messages = Message::all();
+
+$messages->loadChildren([
+    TextMessage::class => ['mentions'],
+    ImageMessage::class => ['attachments'],
+]);
+```
+
+This will ensure that the appropriate relationships are eager-loaded for each child model in the collection based on its type.
+
+Alternatively, you may eager-load the relationship counts using the `loadChildrenCount` method:
+
+```php
+$messages = Message::all();
+
+$messages->loadChildrenCount([
+    TextMessage::class => ['mentions'],
+    ImageMessage::class => ['attachments'],
+]);
+```
+
+This will ensure the `mentions_count` attribute will be filled for instances of the `TextMessage` model, and the `attachments_count` attribute will be filled for instances of the `ImageMessage` model.
+
+### Eager Loading From Query and Relationship
+
+You may eager-load relationships directly from a query or relationship using the `childrenWith` method:
+
+```php
+// From a query...
+$messages = Message::query()->childrenWith([
+    TextMessage::class => ['mentions'],
+    ImageMessage::class => ['attachments'],
+])->get();
+```
+
+You may also eager-load from a relationship. For instance, if we had a `Room` parent model that had messages:
+
+```php
+class Room extends Model
+{
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }
+}
+```
+
+Then, we could eager-load child relationships like so:
+
+```php
+// From a relationship...
+$room = Room::first();
+$messages = $room->messages()->childrenWith([
+    TextMessage::class => ['mentions'],
+    ImageMessage::class => ['attachments'],
+])->get();
+
+```
+
+This will ensure that the appropriate relationships are eager-loaded for each child model in the result set based on its type.
+
+Alternatively, you may eager-load the relationship counts using the `childrenWithCount` method:
+
+```php
+// From a query...
+$messages = Message::query()->childrenWithCount([
+    TextMessage::class => ['mentions'],
+    ImageMessage::class => ['attachments'],
+])->get();
+
+// From a relationship...
+$room = Room::first();
+$messages = $room->messages()->childrenWithCount([
+    TextMessage::class => ['mentions'],
+    ImageMessage::class => ['attachments'],
+])->get();
+```
+
+This will ensure the `mentions_count` attribute is filled on instances of the `TextMessage` model, and the `attachments_count` attribute is filled on instances of the `ImageMessage` model.
+
 ## Laravel Nova Support
 
 If you want to use share parent Nova resources with child models, you may register the following provider at the end of the boot method of your NovaServiceProvider:

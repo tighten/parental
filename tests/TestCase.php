@@ -5,6 +5,7 @@ namespace Parental\Tests;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use Parental\Providers\ParentalServiceProvider;
 
 class TestCase extends BaseTestCase
 {
@@ -107,9 +108,30 @@ class TestCase extends BaseTestCase
             $table->timestamps();
         });
 
+        Schema::create('rooms', function ($table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->timestamps();
+        });
+
         Schema::create('messages', function ($table) {
             $table->increments('id');
+            $table->foreignId('room_id')->nullable();
+            $table->foreignId('video_id')->nullable();
             $table->integer('type');
+            $table->timestamps();
+        });
+
+        Schema::create('videos', function ($table) {
+            $table->increments('id');
+            $table->string('url');
+            $table->timestamps();
+        });
+
+        Schema::create('images', function ($table) {
+            $table->increments('id');
+            $table->foreignId('message_id')->nullable();
+            $table->string('url');
             $table->timestamps();
         });
     }
@@ -123,5 +145,12 @@ class TestCase extends BaseTestCase
             'database' => ':memory:',
             'prefix' => '',
         ]);
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [
+            ParentalServiceProvider::class,
+        ];
     }
 }
