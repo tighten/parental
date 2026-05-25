@@ -12,7 +12,7 @@ jobs:
       fail-fast: true
       matrix:
         php: [8.1, 8.2, 8.3]
-        laravel: ['10.*', '11.*', '12.*', '13.*']
+        laravel: ["10.*", "11.*", "12.*", "13.*"]
         dependency-version: [prefer-stable]
         include:
           - laravel: 10.*
@@ -39,16 +39,16 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Cache Dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
         with:
           path: ~/.composer/cache/files
           key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
         with:
           php-version: ${{ matrix.php }}
           extensions: curl, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, iconv, mcrypt
