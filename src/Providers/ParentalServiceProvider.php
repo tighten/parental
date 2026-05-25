@@ -19,7 +19,7 @@ class ParentalServiceProvider extends ServiceProvider
         Collection::macro('loadChildren', function (array $childrenRelationsMap) {
             EagerLoadingException::throwOnUnsupportedLaravelVersions();
 
-            /** @var \Illuminate\Database\Eloquent\Collection $this */
+            /** @var Collection $this */
             $this->groupBy(fn (Model $model) => get_class($model))
                 ->each(fn ($models, string $className) => Collection::make($models)->load($childrenRelationsMap[$className] ?? []));
 
@@ -29,7 +29,7 @@ class ParentalServiceProvider extends ServiceProvider
         Collection::macro('loadChildrenCount', function (array $childrenRelationsMap) {
             EagerLoadingException::throwOnUnsupportedLaravelVersions();
 
-            /** @var \Illuminate\Database\Eloquent\Collection $this */
+            /** @var Collection $this */
             $this->groupBy(fn (Model $model) => get_class($model))
                 ->each(fn ($models, string $className) => Collection::make($models)->loadCount($childrenRelationsMap[$className] ?? []));
 

@@ -3,9 +3,11 @@
 namespace Parental;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Events\QueuedClosure;
 use Illuminate\Support\Str;
 use Parental\Exceptions\EagerLoadingException;
 use UnitEnum;
@@ -24,7 +26,7 @@ trait HasChildren
     /**
      * Register a becoming model event with the dispatcher.
      *
-     * @param  \Illuminate\Events\QueuedClosure|callable|array|class-string  $callback
+     * @param  QueuedClosure|callable|array|class-string  $callback
      */
     public static function becoming($callback): void
     {
@@ -35,7 +37,7 @@ trait HasChildren
      * Register a model event with the dispatcher.
      *
      * @param  string  $event
-     * @param  \Illuminate\Events\QueuedClosure|callable|array|class-string  $callback
+     * @param  QueuedClosure|callable|array|class-string  $callback
      */
     protected static function registerModelEvent($event, $callback): void
     {
@@ -161,7 +163,7 @@ trait HasChildren
      * @param  string|null  $foreignKey
      * @param  string|null  $ownerKey
      * @param  string|null  $relation
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TRelatedModel, $this>
+     * @return BelongsTo<TRelatedModel, $this>
      */
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null): BelongsTo
     {
@@ -186,7 +188,7 @@ trait HasChildren
      * @param  class-string<TRelatedModel>  $related
      * @param  string|null  $foreignKey
      * @param  string|null  $localKey
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TRelatedModel, $this>
+     * @return HasMany<TRelatedModel, $this>
      */
     public function hasMany($related, $foreignKey = null, $localKey = null): HasMany
     {
@@ -199,13 +201,13 @@ trait HasChildren
      * @template TRelatedModel of \Illuminate\Database\Eloquent\Model
      *
      * @param  class-string<TRelatedModel>  $related
-     * @param  string|class-string<\Illuminate\Database\Eloquent\Model>|null  $table
+     * @param  string|class-string<Model>|null  $table
      * @param  string|null  $foreignPivotKey
      * @param  string|null  $relatedPivotKey
      * @param  string|null  $parentKey
      * @param  string|null  $relatedKey
      * @param  string|null  $relation
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<TRelatedModel, $this>
+     * @return BelongsToMany<TRelatedModel, $this>
      */
     public function belongsToMany(
         $related, $table = null,
