@@ -5,7 +5,6 @@ namespace Parental\Providers;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
-use Parental\Exceptions\EagerLoadingException;
 
 class ParentalServiceProvider extends ServiceProvider
 {
@@ -17,8 +16,6 @@ class ParentalServiceProvider extends ServiceProvider
     private function bindEagerLoadingMacros(): void
     {
         Collection::macro('loadChildren', function (array $childrenRelationsMap) {
-            EagerLoadingException::throwOnUnsupportedLaravelVersions();
-
             /** @var Collection $this */
             $this->groupBy(fn (Model $model) => get_class($model))
                 ->each(fn ($models, string $className) => Collection::make($models)->load($childrenRelationsMap[$className] ?? []));
@@ -27,8 +24,6 @@ class ParentalServiceProvider extends ServiceProvider
         });
 
         Collection::macro('loadChildrenCount', function (array $childrenRelationsMap) {
-            EagerLoadingException::throwOnUnsupportedLaravelVersions();
-
             /** @var Collection $this */
             $this->groupBy(fn (Model $model) => get_class($model))
                 ->each(fn ($models, string $className) => Collection::make($models)->loadCount($childrenRelationsMap[$className] ?? []));
