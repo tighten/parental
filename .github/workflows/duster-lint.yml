@@ -14,7 +14,16 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
-      - name: "Duster Lint"
-        uses: tighten/duster-action@557d11cf6d55a7f7cf6324806c633af0062759eb # v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
         with:
-          args: lint
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Duster Lint
+        run: ./vendor/bin/duster lint
