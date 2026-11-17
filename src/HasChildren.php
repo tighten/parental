@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Events\QueuedClosure;
 use Illuminate\Support\Str;
-use Parental\Exceptions\EagerLoadingException;
 use UnitEnum;
 
 /**
@@ -88,8 +87,6 @@ trait HasChildren
      */
     public function scopeChildrenWith(EloquentBuilder $query, array $relations): void
     {
-        EagerLoadingException::throwOnUnsupportedLaravelVersions();
-
         $query->afterQuery(fn ($models) => $models->loadChildren($relations));
     }
 
@@ -98,8 +95,6 @@ trait HasChildren
      */
     public function scopeChildrenWithCount(EloquentBuilder $query, array $relations): void
     {
-        EagerLoadingException::throwOnUnsupportedLaravelVersions();
-
         $query->afterQuery(fn ($models) => $models->loadChildrenCount($relations));
     }
 
@@ -317,8 +312,6 @@ trait HasChildren
      */
     public function loadChildren(array $relations): static
     {
-        EagerLoadingException::throwOnUnsupportedLaravelVersions();
-
         $this->load($relations[get_class($this)] ?? []);
 
         return $this;
@@ -329,8 +322,6 @@ trait HasChildren
      */
     public function loadChildrenCount(array $relations): static
     {
-        EagerLoadingException::throwOnUnsupportedLaravelVersions();
-
         $this->loadCount($relations[get_class($this)] ?? []);
 
         return $this;
